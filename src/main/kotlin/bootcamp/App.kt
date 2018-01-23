@@ -1,4 +1,4 @@
-package com.template
+package bootcamp
 
 import co.paralleluniverse.fibers.Suspendable
 import net.corda.core.contracts.*

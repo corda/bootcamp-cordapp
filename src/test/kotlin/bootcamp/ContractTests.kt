@@ -1,4 +1,4 @@
-package com.template
+package bootcamp
 
 import net.corda.testing.setCordappPackages
 import net.corda.testing.unsetCordappPackages

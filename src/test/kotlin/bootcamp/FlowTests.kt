@@ -1,4 +1,4 @@
-package com.template
+package bootcamp
 
 import net.corda.node.internal.StartedNode
 import net.corda.testing.node.MockNetwork
