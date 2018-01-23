@@ -8,7 +8,7 @@ import net.corda.core.transactions.*
 import net.corda.core.utilities.ProgressTracker
 
 /* Contract name **/
-val SOMETHING_CONTRACT_ID = "com.template.SomethingContract"
+val SOMETHING_CONTRACT_ID = "bootcamp.SomethingContract"
 
 /* State **/
 data class SomethingState(val owner: Party) : ContractState {
@@ -21,7 +21,7 @@ class SomethingContract : Contract {
         if (tx.inputs.isNotEmpty()) throw Exception("Transaction has no inputs")
         if (tx.outputs.size != 1) throw Exception("Transaction has one output")
         if (tx.commands.size != 1) throw Exception("Transaction has one command")
-        val outputState = tx.inputsOfType<SomethingState>().single()
+        val outputState = tx.outputsOfType<SomethingState>().single()
         val command = tx.commands.single()
         if (outputState.owner.owningKey !in command.signers) throw Exception( "Command lists output's two parties as signers")
     }
