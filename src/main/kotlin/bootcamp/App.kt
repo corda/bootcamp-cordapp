@@ -10,6 +10,8 @@ import net.corda.core.identity.Party
 import net.corda.core.transactions.LedgerTransaction
 import net.corda.core.transactions.TransactionBuilder
 import net.corda.core.utilities.ProgressTracker
+import bootcamp.DonationContract.Donate
+import bootcamp.DonationContract.Companion.DONATION_CONTRACT_ID
 
 /* Our state, defining a shared fact on the ledger. */
 data class DonationState(val donor: Party, val charity: Party, val amount: Int) : ContractState {
@@ -32,7 +34,7 @@ class DonationContract : Contract {
         val outputState = tx.outputStates[0]
         if (outputState !is DonationState) throw Exception("Output should be a DonationState")
         if (outputState.amount < 0) throw Exception("Donation should be positive")
-        
+
         val command = tx.commands[0]
         if (command.value !is Donate) throw Exception("Command should be Donate")
         if (outputState.donor.owningKey !in command.signers) throw Exception( "Donor must sign the donation")
@@ -52,10 +54,8 @@ class DonationFlow(val charity: Party, val amount: Int) : FlowLogic<Unit>() {
 
         // We build our transaction.
         val txBuilder = TransactionBuilder(notary)
-        val outputState = DonationState(ourIdentity, charity, amount)
-        val outputStateAndContract = StateAndContract(outputState, DonationContract.DONATION_CONTRACT_ID)
-        val command = Command(DonationContract.Donate, ourIdentity.owningKey)
-        txBuilder.withItems(outputStateAndContract, command)
+        txBuilder.addOutputState(DonationState(ourIdentity, charity, amount), DONATION_CONTRACT_ID)
+        txBuilder.addCommand(Donate, ourIdentity.owningKey)
 
         // We check our transaction is valid based on its contracts.
         txBuilder.verify(serviceHub)
