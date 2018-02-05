@@ -27,12 +27,12 @@ class DonationContract : Contract {
     override fun verify(tx: LedgerTransaction) {
         if (tx.inputStates.size != 0) throw Exception("Transaction should have no inputs")
         if (tx.outputStates.size != 1) throw Exception("Transaction should have one output")
+        if (tx.commands.size != 1) throw Exception("Transaction should have one command")
 
         val outputState = tx.outputStates[0]
         if (outputState !is DonationState) throw Exception("Output should be a DonationState")
         if (outputState.amount < 0) throw Exception("Donation should be positive")
-
-        if (tx.commands.size != 1) throw Exception("Transaction should have one command")
+        
         val command = tx.commands[0]
         if (command.value !is Donate) throw Exception("Command should be Donate")
         if (outputState.donor.owningKey !in command.signers) throw Exception( "Donor must sign the donation")
