@@ -6,6 +6,7 @@ import co.paralleluniverse.fibers.Suspendable
 import net.corda.core.contracts.CommandData
 import net.corda.core.contracts.Contract
 import net.corda.core.contracts.ContractState
+import net.corda.core.contracts.requireThat
 import net.corda.core.flows.FinalityFlow
 import net.corda.core.flows.FlowLogic
 import net.corda.core.flows.InitiatingFlow
@@ -28,18 +29,19 @@ class TokenContract : Contract {
 
     object Issue: CommandData
 
-    override fun verify(tx: LedgerTransaction) {
-        if (tx.inputStates.size != 0) throw Exception("Transaction should have no inputs")
-        if (tx.outputStates.size != 1) throw Exception("Transaction should have one output")
-        if (tx.commands.size != 1) throw Exception("Transaction should have one command")
+    override fun verify(tx: LedgerTransaction) = requireThat {
+        "Transaction should have no inputs" using (tx.inputStates.size == 0)
+        "Transaction should have one output" using (tx.outputStates.size == 1)
+        "Transaction should have one command" using (tx.commands.size == 1)
 
         val outputState = tx.outputStates[0]
-        if (outputState !is TokenState) throw Exception("Output should be a TokenState")
-        if (outputState.amount < 0) throw Exception("Token amount should be positive")
+        "Output should be a TokenState" using (outputState is TokenState)
+        outputState as TokenState
+        "Token amount should be positive" using (outputState.amount > 0)
 
         val command = tx.commands[0]
-        if (command.value !is Issue) throw Exception("Command should be Donate")
-        if (outputState.issuer.owningKey !in command.signers) throw Exception( "Donor must sign the issuance")
+        "Command should be Issue" using (command.value is Issue)
+        "Issuer must sign the issuance" using (outputState.issuer.owningKey in command.signers)
     }
 }
 
