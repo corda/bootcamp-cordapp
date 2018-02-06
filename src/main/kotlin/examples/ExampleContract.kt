@@ -66,7 +66,7 @@ class IAmAContract : Contract {
         val filteredCommandsWithData = tx.filterCommands<Commands.CommandWithData> { it.contents == "command contents" }
         // Grabbing the single command of type CommandWithData that meets a criterion.
         val commandWithData = tx.findCommand<Commands.CommandWithData> { it.contents == "command contents" }
-        // Extracting the command's value from the command.
+        // Each command pairs a list of signers with a value. Here, we grab the command's value.
         val commandWithDataValue = commandWithData.value
 
         // ATTACHMENTS
