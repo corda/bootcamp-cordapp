@@ -1,6 +1,5 @@
 package bootcamp
 
-import bootcamp.TokenContract.Companion.TOKEN_CONTRACT_ID
 import bootcamp.TokenContract.Issue
 import co.paralleluniverse.fibers.Suspendable
 import net.corda.core.contracts.CommandData
@@ -24,7 +23,7 @@ data class TokenState(val issuer: Party, val recipient: Party, val amount: Int) 
 /* Our contract, governing how our state will evolve over time. */
 class TokenContract : Contract {
     companion object {
-        val TOKEN_CONTRACT_ID = "bootcamp.TokenContract"
+        val ID = "bootcamp.TokenContract"
     }
 
     object Issue: CommandData
@@ -58,7 +57,7 @@ class TokenFlow(val charity: Party, val amount: Int) : FlowLogic<Unit>() {
 
         // We build our transaction.
         val txBuilder = TransactionBuilder(notary)
-        txBuilder.addOutputState(TokenState(ourIdentity, charity, amount), TOKEN_CONTRACT_ID)
+        txBuilder.addOutputState(TokenState(ourIdentity, charity, amount), TokenContract.ID)
         txBuilder.addCommand(Issue, ourIdentity.owningKey)
 
         // We check our transaction is valid based on its contracts.
