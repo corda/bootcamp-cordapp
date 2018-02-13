@@ -25,7 +25,7 @@ class ReplaceWithTokenContractDefinition
 /* Our flow, automating the process of updating the ledger. */
 @InitiatingFlow
 @StartableByRPC
-class TokenFlow(val charity: Party, val amount: Int) : FlowLogic<Unit>() {
+class TokenFlow(val recipient: Party, val amount: Int) : FlowLogic<Unit>() {
     override val progressTracker = ProgressTracker()
 
     @Suspendable
@@ -35,7 +35,7 @@ class TokenFlow(val charity: Party, val amount: Int) : FlowLogic<Unit>() {
 
         // We build our transaction.
         val txBuilder = TransactionBuilder(notary)
-        txBuilder.addOutputState(TokenState(ourIdentity, charity, amount), TokenContract.ID)
+        txBuilder.addOutputState(TokenState(ourIdentity, recipient, amount), TokenContract.ID)
         txBuilder.addCommand(TokenContract.Issue, ourIdentity.owningKey)
 
         // We check our transaction is valid based on its contracts.
