@@ -1,5 +1,7 @@
 package bootcamp
 
+import bootcamp.solution.TokenContract
+import bootcamp.solution.TokenState
 import co.paralleluniverse.fibers.Suspendable
 import net.corda.core.flows.FinalityFlow
 import net.corda.core.flows.FlowLogic
@@ -8,19 +10,14 @@ import net.corda.core.flows.StartableByRPC
 import net.corda.core.identity.Party
 import net.corda.core.transactions.TransactionBuilder
 import net.corda.core.utilities.ProgressTracker
-import net.corda.core.contracts.CommandData
-import net.corda.core.contracts.Contract
-import net.corda.core.contracts.ContractState
-import net.corda.core.contracts.requireThat
-import net.corda.core.transactions.LedgerTransaction
 
 /* Our state, defining a shared fact on the ledger.
  * See src/main/kotlin/examples/ExampleStates.kt for examples. */
-class ReplaceWithTokenStateDefinition
+class TokenState
 
 /* Our contract, governing how our state will evolve over time.
  * See src/main/kotlin/examples/ExampleContract.kt for an example. */
-class ReplaceWithTokenContractDefinition
+class TokenContract
 
 /* Our flow, automating the process of updating the ledger. */
 @InitiatingFlow

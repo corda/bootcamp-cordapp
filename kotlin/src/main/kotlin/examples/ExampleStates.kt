@@ -23,14 +23,10 @@ class IAmAlsoAState(
 // Can also implement other interfaces (in this case, Comparable).
 ): LinearState, Comparable<IAmAlsoAState> {
     // Overrides participants, the only field defined by ContractState.
-    override val participants = listOf<Party>()
+    override val participants = listOf(person)
 
     // Can implement additional functions as well.
     override fun compareTo(other: IAmAlsoAState): Int {
-        return when {
-            linearId == other.linearId -> 0
-            linearId > other.linearId -> 1
-            else -> -1
-        }
+        return linearId.compareTo(other.linearId)
     }
 }

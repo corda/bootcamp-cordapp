@@ -1,4 +1,4 @@
-package bootcamp
+package bootcamp.solution
 
 import net.corda.core.contracts.CommandData
 import net.corda.core.contracts.Contract
@@ -15,7 +15,7 @@ class TokenState(val issuer: Party, val recipient: Party, val amount: Int) : Con
 /* Our contract, governing how our state will evolve over time. */
 class TokenContract : Contract {
     companion object {
-        val ID = "bootcamp.TokenContract"
+        val ID = "bootcamp.solution.TokenContract"
     }
 
     object Issue: CommandData
