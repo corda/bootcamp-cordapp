@@ -76,7 +76,7 @@ task deployNodesKotlin(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
         cordapps = [
                 "$project.group:cordapp:$project.version"
         ]
-        rpcUsers = [[user: "user1", "password": "test", "permissions": []]]
+        rpcUsers = [[user: "user1", "password": "test", "permissions": ["ALL"]]]
     }
 }
 
