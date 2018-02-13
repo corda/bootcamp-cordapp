@@ -1,6 +1,5 @@
 package bootcamp
 
-import bootcamp.solution.TokenState
 import net.corda.core.contracts.ContractState
 import net.corda.core.identity.CordaX500Name
 import net.corda.testing.core.TestIdentity

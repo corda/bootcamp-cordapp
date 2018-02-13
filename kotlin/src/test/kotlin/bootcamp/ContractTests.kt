@@ -1,7 +1,5 @@
 package bootcamp
 
-import bootcamp.solution.TokenContract
-import bootcamp.solution.TokenState
 import net.corda.core.identity.CordaX500Name
 import net.corda.testing.contracts.DummyState
 import net.corda.testing.core.DummyCommandData
@@ -17,7 +15,7 @@ class ContractTests {
     private val tokenState = TokenState(alice.party, bob.party, 1)
 
     @Test
-    fun `TokenContract requires zero inputs in the transction`() {
+    fun `TokenContract requires zero inputs in the transaction`() {
         ledgerServices.ledger {
             transaction {
                 // Has an input, will fail.

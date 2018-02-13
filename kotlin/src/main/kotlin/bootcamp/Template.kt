@@ -1,23 +1,55 @@
 package bootcamp
 
-import bootcamp.solution.TokenContract
-import bootcamp.solution.TokenState
 import co.paralleluniverse.fibers.Suspendable
+import net.corda.core.contracts.CommandData
+import net.corda.core.contracts.Contract
+import net.corda.core.contracts.ContractState
+import net.corda.core.contracts.requireThat
 import net.corda.core.flows.FinalityFlow
 import net.corda.core.flows.FlowLogic
 import net.corda.core.flows.InitiatingFlow
 import net.corda.core.flows.StartableByRPC
 import net.corda.core.identity.Party
+import net.corda.core.transactions.LedgerTransaction
 import net.corda.core.transactions.TransactionBuilder
 import net.corda.core.utilities.ProgressTracker
 
-/* Our state, defining a shared fact on the ledger.
- * See src/main/kotlin/examples/ExampleStates.kt for examples. */
-class TokenState
+///* Our state, defining a shared fact on the ledger.
+// * See src/main/kotlin/examples/ExampleStates.kt for examples. */
+//class TokenState
 
-/* Our contract, governing how our state will evolve over time.
- * See src/main/kotlin/examples/ExampleContract.kt for an example. */
-class TokenContract
+/* SOLUTION */
+class TokenState(val issuer: Party, val recipient: Party, val amount: Int) : ContractState {
+    override val participants = listOf(issuer, recipient)
+}
+
+///* Our contract, governing how our state will evolve over time.
+// * See src/main/kotlin/examples/ExampleContract.kt for an example. */
+//class TokenContract
+
+/* SOLUTION */
+class TokenContract : Contract {
+    companion object {
+        val ID = "bootcamp.TokenContract"
+    }
+
+    object Issue: CommandData
+
+    override fun verify(tx: LedgerTransaction) = requireThat {
+        "Transaction should have no inputs" using (tx.inputStates.size == 0)
+        "Transaction should have one output" using (tx.outputStates.size == 1)
+        "Transaction should have one command" using (tx.commands.size == 1)
+
+        val outputState = tx.outputStates[0]
+        "Output should be a TokenState" using (outputState is TokenState)
+        outputState as TokenState
+        "Token amount should be positive" using (outputState.amount > 0)
+
+        val command = tx.commands[0]
+        "Command should be Issue" using (command.value is TokenContract.Issue)
+        "Issuer must sign the issuance" using (outputState.issuer.owningKey in command.signers)
+    }
+}
 
 /* Our flow, automating the process of updating the ledger. */
 @InitiatingFlow

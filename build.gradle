@@ -4,13 +4,13 @@ buildscript {
     ext.corda_gradle_plugins_version = '3.0.5'
     ext.kotlin_version = '1.2.20'
     ext.junit_version = '4.12'
-    ext.quasar_version = '0.7.6'
+    ext.quasar_version = '0.7.9'
 
     repositories {
+        flatDir { dirs "lib/dependencies" }
         mavenLocal()
         mavenCentral()
         jcenter()
-        flatDir { dirs "lib/dependencies" }
     }
 
     dependencies {
@@ -20,26 +20,4 @@ buildscript {
         classpath "net.corda.plugins:cordformation:$corda_gradle_plugins_version"
         classpath "net.corda.plugins:quasar-utils:$corda_gradle_plugins_version"
     }
-}
-
-repositories {
-    mavenLocal()
-    jcenter()
-    mavenCentral()
-    maven { url 'https://jitpack.io' }
-    maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
-    flatDir { dirs "lib/dependencies" }
-}
-
-apply plugin: 'kotlin'
-apply plugin: 'net.corda.plugins.cordapp'
-apply plugin: 'net.corda.plugins.cordformation'
-apply plugin: 'net.corda.plugins.quasar-utils'
-
-task gatherDependencies(type: Copy) {
-    into "../lib/dependencies"
-    from buildscript.configurations.classpath
-    from configurations.runtime
-    from configurations.testRuntime
-    from configurations.quasar
 }
