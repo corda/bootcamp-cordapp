@@ -48,7 +48,7 @@ task deployNodesJava(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
         name "O=NetworkMapAndNotary,L=London,C=GB"
         notary = [validating : false]
         p2pPort 10002
-        rpcPort 10003
+        rpcSettings = [port : 10003]
         cordapps = [
                 "$project.group:cordapp:$project.version"
         ]
@@ -56,7 +56,7 @@ task deployNodesJava(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
     node {
         name "O=PartyA,L=London,C=GB"
         p2pPort 10005
-        rpcPort 10006
+        rpcSettings = [port : 10006]
         cordapps = [
                 "$project.group:cordapp:$project.version"
         ]
@@ -65,7 +65,7 @@ task deployNodesJava(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
     node {
         name "O=PartyB,L=New York,C=US"
         p2pPort 10008
-        rpcPort 10009
+        rpcSettings = [port : 10009]
         cordapps = [
                 "$project.group:cordapp:$project.version"
         ]

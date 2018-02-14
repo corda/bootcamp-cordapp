@@ -6,6 +6,7 @@ import net.corda.core.identity.Party;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 import net.corda.core.utilities.ProgressTracker;
+import org.jetbrains.annotations.Nullable;
 
 /* Our flow, automating the process of updating the ledger. */
 @InitiatingFlow
@@ -18,6 +19,11 @@ public class TokenFlow extends FlowLogic<Void> {
     public TokenFlow(Party recipient, int amount) {
         this.recipient = recipient;
         this.amount = amount;
+    }
+
+    @Override
+    public ProgressTracker getProgressTracker() {
+        return progressTracker;
     }
 
     @Suspendable

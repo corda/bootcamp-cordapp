@@ -106,3 +106,35 @@ already defined, and automates the following steps:
                                  transaction                   
               |                       |                       |
               ▼                       ▼                       ▼
+
+## Running our CorDapp
+
+Normally, you'd interact with a CorDapp via a client or webserver. So we can
+focus on our CorDapp, we'll be running it via the node shell instead.
+
+Once you've finished the CorDapp's code, run it with the following steps:
+
+* Build a test network of nodes by opening a terminal window at the root of
+  your project and running the following command:
+
+    Windows, Kotlin code: gradlew.bat deployNodesKotlin
+    Windows, Java code:   gradlew.bat deployNodesJava
+    macOS, Kotlin code:   ./gradlew deployNodesKotlin
+    macOS, Java code:     ./gradlew deployNodesJava
+
+* Start the nodes by running the following command:
+
+    Windows, Kotlin code: kotlin\build\nodes\runnodes.bat
+    Windows, Java code:   java\build\nodes\runnodes.bat
+    macOS, Kotlin code:   kotlin/build/nodes/runnodes
+    macOS, Java code:     java/build/nodes/runnodes
+
+* Open the nodes are started, go to the terminal of Party A (not the notary!)
+  and run the following command to issue 99 tokens to Party B:
+
+    flow start TokenFlow recipient: PartyB, amount: 99
+
+* You can now see the tokens in both nodes' vaults by running the following
+  command in their respective terminals:
+
+    run vaultQuery contractStateType: bootcamp.TokenState
