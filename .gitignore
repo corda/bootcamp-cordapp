@@ -9,3 +9,5 @@
 build
 lib
 .DS_Store
+java/out/
+kotlin/out/
