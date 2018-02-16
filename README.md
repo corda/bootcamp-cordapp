@@ -68,8 +68,8 @@ on transactions involving TokenStates:
 
 ### The TokenFlow
 
-Flows automate the process of updating the ledger. Our flow, TokenFlow, is 
-already defined, and automates the following steps:
+Flows automate the process of updating the ledger. Our flow, TokenFlow, will 
+automate the following steps:
 
             Issuer                Recipient                Notary
               |                       |                       |
