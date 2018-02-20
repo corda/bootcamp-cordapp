@@ -69,9 +69,9 @@ TokenState transaction:
 To do so, TokenContract will impose the following constraints on transactions 
 involving TokenStates:
 
-* Transaction has no input states
-* Transaction has one output state
-* Transaction has one command
+* The transaction has no input states
+* The transaction has one output state
+* The transaction has one command
 * The output state is a TokenState
 * The output state has a positive amount
 * The command is an Issue command
