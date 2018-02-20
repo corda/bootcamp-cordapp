@@ -69,7 +69,7 @@ task deployNodesKotlin(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
         cordapps = [
                 "$project.group:cordapp:$project.version"
         ]
-        rpcUsers = [[user: "user1", "password": "test", "permissions": ["ALL"]]]
+        rpcUsers = [[user: "user1", password: "test", permissions: ["ALL"]]]
     }
     node {
         name "O=PartyB,L=New York,C=US"
@@ -81,7 +81,7 @@ task deployNodesKotlin(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
         cordapps = [
                 "$project.group:cordapp:$project.version"
         ]
-        rpcUsers = [[user: "user1", "password": "test", "permissions": ["ALL"]]]
+        rpcUsers = [[user: "user1", password: "test", permissions: ["ALL"]]]
     }
 }
 

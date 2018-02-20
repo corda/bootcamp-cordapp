@@ -43,27 +43,27 @@ tasks.withType(JavaCompile) {
 }
 
 task deployNodesJava(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
-    directory "./build/nodes"
-    node {
-        name "O=NetworkMapAndNotary,L=London,C=GB"
-        notary = [validating : false]
-        p2pPort 10002
-        cordapps = [
-                "$project.group:cordapp:$project.version"
-        ]
-    }
-    node {
-        name "O=PartyA,L=London,C=GB"
-        p2pPort 10005
-        rpcSettings {
-            address("localhost:10006")
-            adminAddress("localhost:10046")
+        directory "./build/nodes"
+        node {
+            name "O=NetworkMapAndNotary,L=London,C=GB"
+            notary = [validating : false]
+            p2pPort 10002
+            cordapps = [
+                    "$project.group:cordapp:$project.version"
+            ]
         }
-        cordapps = [
-                "$project.group:cordapp:$project.version"
-        ]
-        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
-    }
+        node {
+            name "O=PartyA,L=London,C=GB"
+            p2pPort 10005
+            rpcSettings {
+                address("localhost:10006")
+                adminAddress("localhost:10046")
+            }
+            cordapps = [
+                    "$project.group:cordapp:$project.version"
+            ]
+            rpcUsers = [[ user: "user1", password: "test", permissions: ["ALL"]]]
+        }
     node {
         name "O=PartyB,L=New York,C=US"
         p2pPort 10008
@@ -74,7 +74,7 @@ task deployNodesJava(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
         cordapps = [
                 "$project.group:cordapp:$project.version"
         ]
-        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+        rpcUsers = [[ user: "user1", password: "test", permissions: ["ALL"]]]
     }
 }
 
