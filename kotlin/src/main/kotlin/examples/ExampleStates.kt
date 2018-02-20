@@ -13,12 +13,12 @@ class IAmAState: ContractState {
 }
 
 // A much more complex state.
-class IAmAlsoAState(
+data class IAmAlsoAState(
         // Defines various fields that will be stored on the ledger as part of the state.
         val data: String,
         val person: Party,
-        // Also overrides linearId, a field defined by LinearState.
-        override val linearId: UniqueIdentifier
+        // Also overrides linearId, a field defined by LinearState, and provides a default value.
+        override val linearId: UniqueIdentifier = UniqueIdentifier()
 // Doesn't implement ContractState directly. Instead, implements LinearState which extends ContractState.
 // Can also implement other interfaces (in this case, Comparable).
 ): LinearState, Comparable<IAmAlsoAState> {
