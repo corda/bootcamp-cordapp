@@ -46,8 +46,8 @@ token. It will have the following structure:
 ### The TokenContract
 
 Contracts govern how states evolve over time. Our contract, TokenContract, 
-will define how TokenStates evolve. It will impose the following constraints 
-on transactions involving TokenStates:
+will define how TokenStates evolve. It will only allow the following type of 
+TokenState transaction:
 
     -------------------------------------------------------------------------------------
     |                                                                                   |
@@ -65,6 +65,17 @@ on transactions involving TokenStates:
 
               No inputs             One issue command,                One output,
                                  issuer is a required signer       amount is positive
+
+To do so, TokenContract will impose the following constraints on transactions 
+involving TokenStates:
+
+* Transaction has no input states
+* Transaction has one output state
+* Transaction has one command
+* The output state is a TokenState
+* The output state has a positive amount
+* The command is an Issue command
+* The command lists the TokenState's issuer as a required signer
 
 ### The TokenFlow
 
