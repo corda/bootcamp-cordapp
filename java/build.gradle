@@ -43,38 +43,50 @@ tasks.withType(JavaCompile) {
 }
 
 task deployNodesJava(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
-        directory "./build/nodes"
-        node {
-            name "O=NetworkMapAndNotary,L=London,C=GB"
-            notary = [validating : false]
-            p2pPort 10002
-            cordapps = [
-                    "$project.group:cordapp:$project.version"
-            ]
-        }
-        node {
-            name "O=PartyA,L=London,C=GB"
-            p2pPort 10005
-            rpcSettings {
-                address("localhost:10006")
-                adminAddress("localhost:10046")
-            }
-            cordapps = [
-                    "$project.group:cordapp:$project.version"
-            ]
-            rpcUsers = [[ user: "user1", password: "test", permissions: ["ALL"]]]
-        }
+    directory "./build/nodes"
     node {
-        name "O=PartyB,L=New York,C=US"
-        p2pPort 10008
+        name "O=NetworkMapAndNotary,L=London,C=GB"
+        notary = [validating: false]
+        p2pPort 10002
+        cordapps = [
+                "$project.group:cordapp:$project.version"
+        ]
+    }
+    node {
+        name "O=PartyA,L=London,C=GB"
+        p2pPort 10003
         rpcSettings {
-            address("localhost:10009")
-            adminAddress("localhost:10049")
+            address("localhost:10004")
+            adminAddress("localhost:10005")
         }
         cordapps = [
                 "$project.group:cordapp:$project.version"
         ]
-        rpcUsers = [[ user: "user1", password: "test", permissions: ["ALL"]]]
+        rpcUsers = [[user: "user1", password: "test", permissions: ["ALL"]]]
+    }
+    node {
+        name "O=PartyB,L=New York,C=US"
+        p2pPort 10006
+        rpcSettings {
+            address("localhost:10007")
+            adminAddress("localhost:10008")
+        }
+        cordapps = [
+                "$project.group:cordapp:$project.version"
+        ]
+        rpcUsers = [[user: "user1", password: "test", permissions: ["ALL"]]]
+    }
+    node {
+        name "O=PartyC,L=Lagos,C=NG"
+        p2pPort 10009
+        rpcSettings {
+            address("localhost:10010")
+            adminAddress("localhost:10011")
+        }
+        cordapps = [
+                "$project.group:cordapp:$project.version"
+        ]
+        rpcUsers = [[user: "user1", password: "test", permissions: ["ALL"]]]
     }
 }
 

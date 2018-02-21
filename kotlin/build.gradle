@@ -61,10 +61,10 @@ task deployNodesKotlin(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
     }
     node {
         name "O=PartyA,L=London,C=GB"
-        p2pPort 10005
+        p2pPort 10003
         rpcSettings {
-            address("localhost:10006")
-            adminAddress("localhost:10046")
+            address("localhost:10004")
+            adminAddress("localhost:10005")
         }
         cordapps = [
                 "$project.group:cordapp:$project.version"
@@ -73,10 +73,22 @@ task deployNodesKotlin(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
     }
     node {
         name "O=PartyB,L=New York,C=US"
-        p2pPort 10008
+        p2pPort 10006
         rpcSettings {
-            address("localhost:10009")
-            adminAddress("localhost:10049")
+            address("localhost:10007")
+            adminAddress("localhost:10008")
+        }
+        cordapps = [
+                "$project.group:cordapp:$project.version"
+        ]
+        rpcUsers = [[user: "user1", password: "test", permissions: ["ALL"]]]
+    }
+    node {
+        name "O=PartyC,L=Lagos,C=NG"
+        p2pPort 10009
+        rpcSettings {
+            address("localhost:10010")
+            adminAddress("localhost:10011")
         }
         cordapps = [
                 "$project.group:cordapp:$project.version"
