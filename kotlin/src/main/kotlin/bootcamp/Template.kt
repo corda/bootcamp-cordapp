@@ -15,46 +15,14 @@ import net.corda.core.transactions.SignedTransaction
 import net.corda.core.transactions.TransactionBuilder
 import net.corda.core.utilities.ProgressTracker
 
-///* Our state, defining a shared fact on the ledger.
-// * See src/main/kotlin/examples/ExampleStates.kt for examples. */
-//class TokenState
-
-///* Our contract, governing how our state will evolve over time.
-// * See src/main/kotlin/examples/ExampleContract.kt for an example. */
-//class TokenContract
-
-/* Our flow, automating the process of updating the ledger. */
-// * See src/main/kotlin/examples/ExampleFlow.kt for an example. */
-//@InitiatingFlow
-//@StartableByRPC
-//class TokenFlow(val recipient: Party, val amount: Int) : FlowLogic<Unit>() {
-//    override val progressTracker = ProgressTracker()
-//
-//    @Suspendable
-//    override fun call() {
-//        // We choose our transaction's notary (the notary prevents double-spends).
-//        val notary = serviceHub.networkMapCache.notaryIdentities.first()
-//
-//        // We build our transaction.
-//        val transactionBuilder: TransactionBuilder = TODO("Build a valid transaction.")
-//
-//        // We check our transaction is valid based on its contracts.
-//        transactionBuilder.verify(serviceHub)
-//
-//        // We sign the transaction with our public key, making it immutable.
-//        val signedTransaction = serviceHub.signInitialTransaction(transactionBuilder)
-//
-//        // We get the transaction notarised and recorded automatically by the platform.
-//        subFlow(FinalityFlow(signedTransaction))
-//    }
-//}
-
-/* SOLUTION */
+/* Our state, defining a shared fact on the ledger.
+ * See src/main/kotlin/examples/ExampleStates.kt for examples. */
 class TokenState(val issuer: Party, val recipient: Party, val amount: Int) : ContractState {
     override val participants = listOf(issuer, recipient)
 }
 
-/* SOLUTION */
+/* Our contract, governing how our state will evolve over time.
+ * See src/main/kotlin/examples/ExampleContract.kt for an example. */
 class TokenContract : Contract {
     companion object {
         val ID = "bootcamp.TokenContract"
@@ -78,7 +46,8 @@ class TokenContract : Contract {
     }
 }
 
-/* SOLUTION */
+/* Our flow, automating the process of updating the ledger.
+ * See src/main/kotlin/examples/ExampleFlow.kt for an example. */
 @InitiatingFlow
 @StartableByRPC
 class TokenFlow(val recipient: Party, val amount: Int) : FlowLogic<SignedTransaction>() {
