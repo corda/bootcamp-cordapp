@@ -21,3 +21,17 @@ buildscript {
         classpath "net.corda.plugins:quasar-utils:$corda_gradle_plugins_version"
     }
 }
+
+allprojects {
+    repositories {
+        if (project.hasProperty("dependencies.gather")) {
+            mavenLocal()
+            jcenter()
+            mavenCentral()
+            maven { url 'https://jitpack.io' }
+            maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
+        } else {
+            flatDir { dirs "${project.rootProject.projectDir}/lib/dependencies" }
+        }
+    }
+}
