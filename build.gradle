@@ -7,10 +7,13 @@ buildscript {
     ext.quasar_version = '0.7.9'
 
     repositories {
-        flatDir { dirs "lib/dependencies" }
-        mavenLocal()
-        mavenCentral()
-        jcenter()
+        if (project.hasProperty("dependencies.gather")) {
+            mavenLocal()
+            mavenCentral()
+            jcenter()
+        } else {
+            flatDir { dirs "lib/dependencies" }
+        }
     }
 
     dependencies {
