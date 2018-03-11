@@ -11,7 +11,7 @@ import net.corda.core.utilities.ProgressTracker;
  * See src/main/java/examples/IAmAFlowPair.java for an example. */
 @InitiatingFlow
 @StartableByRPC
-public class TokenFlow extends FlowLogic<Void> {
+public class TokenFlow extends FlowLogic<SignedTransaction> {
     private final ProgressTracker progressTracker = new ProgressTracker();
     private final Party recipient;
     private final int amount;
@@ -28,7 +28,7 @@ public class TokenFlow extends FlowLogic<Void> {
 
     @Suspendable
     @Override
-    public Void call() throws FlowException {
+    public SignedTransaction call() throws FlowException {
         // We choose our transaction's notary (the notary prevents double-spends).
         Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
 
@@ -42,8 +42,6 @@ public class TokenFlow extends FlowLogic<Void> {
         SignedTransaction signedTransaction = getServiceHub().signInitialTransaction(transactionBuilder);
 
         // We get the transaction notarised and recorded automatically by the platform.
-        subFlow(new FinalityFlow(signedTransaction));
-
-        return null;
+        return subFlow(new FinalityFlow(signedTransaction));
     }
 }
