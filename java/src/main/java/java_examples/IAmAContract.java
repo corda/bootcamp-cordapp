@@ -1,4 +1,4 @@
-package examples;
+package java_examples;
 
 import net.corda.core.contracts.*;
 import net.corda.core.crypto.SecureHash;
@@ -12,7 +12,7 @@ import static net.corda.core.contracts.ContractsDSL.requireThat;
 
 public class IAmAContract implements Contract {
     // Used to reference the contract in transactions.
-    public static final String CONTRACT_ID = "examples.IAmAContract";
+    public static final String CONTRACT_ID = "java_examples.IAmAContract";
 
     public interface Commands extends CommandData {
         // A command that is only used to parametrise contract verification.

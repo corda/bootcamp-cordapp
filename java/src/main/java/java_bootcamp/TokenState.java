@@ -1,4 +1,4 @@
-package bootcamp;
+package java_bootcamp;
 
 import com.google.common.collect.ImmutableList;
 import net.corda.core.contracts.ContractState;

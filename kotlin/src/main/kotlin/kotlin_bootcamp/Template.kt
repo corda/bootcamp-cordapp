@@ -1,4 +1,4 @@
-package bootcamp
+package kotlin_bootcamp
 
 import co.paralleluniverse.fibers.Suspendable
 import net.corda.core.contracts.CommandData

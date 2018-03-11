@@ -1,4 +1,4 @@
-package examples;
+package java_examples;
 
 import com.google.common.collect.ImmutableList;
 import net.corda.core.contracts.LinearState;

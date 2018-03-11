@@ -6,16 +6,18 @@ This project is the template we will use to define a complete CorDapp during
 today's bootcamp. Our CorDapp will allow a token to be issued onto the ledger.
 
 We'll take a test-driven approach. You'll know your CorDapp is working 
-when it passes both sets of tests defined in `src/test/kotlin/bootcamp`.
+when it passes both sets of tests defined in `src/test/java/java_bootcamp`.
 
 ## Links to useful resources
 
-This project contains two sets of example state and contract implementations:
+This project contains example state, contract and flow implementations:
 
-* `src/main/kotlin/examples/ExampleStates.kt`
-* `src/main/kotlin/examples/ExampleContract.kt`
+* `src/main/java/java_examples/IAmAState`
+* `src/main/java/java_examples/IAmAlsoAState`
+* `src/main/java/java_examples/IAmAContract`
+* `src/main/java/java_examples/IAmAFlowPair`
 
-There are also several web resources that you will likely find useful for this 
+There are also several web resources that you will likely find useful for this
 bootcamp:
 
 * Key Concepts docs (`docs.corda.net/key-concepts.html`)
@@ -30,7 +32,7 @@ Our CorDapp will have three parts:
 
 ### The TokenState
 
-States define shared facts on the ledger. Our state, TokenState, will define a 
+States define shared facts on the ledger. Our state, TokenState, will define a
 token. It will have the following structure:
 
     -------------------
@@ -45,8 +47,8 @@ token. It will have the following structure:
 
 ### The TokenContract
 
-Contracts govern how states evolve over time. Our contract, TokenContract, 
-will define how TokenStates evolve. It will only allow the following type of 
+Contracts govern how states evolve over time. Our contract, TokenContract,
+will define how TokenStates evolve. It will only allow the following type of
 TokenState transaction:
 
     -------------------------------------------------------------------------------------
@@ -66,7 +68,7 @@ TokenState transaction:
               No inputs             One issue command,                One output,
                                  issuer is a required signer       amount is positive
 
-To do so, TokenContract will impose the following constraints on transactions 
+To do so, TokenContract will impose the following constraints on transactions
 involving TokenStates:
 
 * The transaction has no input states
@@ -79,42 +81,42 @@ involving TokenStates:
 
 ### The TokenFlow
 
-Flows automate the process of updating the ledger. Our flow, TokenFlow, will 
+Flows automate the process of updating the ledger. Our flow, TokenFlow, will
 automate the following steps:
 
             Issuer                Recipient                Notary
               |                       |                       |
-       Chooses a notary                                        
+       Chooses a notary
               |                       |                       |
-        Starts building                                        
+        Starts building
          a transaction                |                       |
-              |                                                
+              |
         Adds the output               |                       |
-          TokenState                                           
+          TokenState
               |                       |                       |
-           Adds the                                            
+           Adds the
          Issue command                |                       |
-              |                                                
+              |
          Verifies the                 |                       |
-          transaction                                          
+          transaction
               |                       |                       |
-          Signs the                                            
+          Signs the
          transaction                  |                       |
-              |                                                
+              |
               |----------------------------------------------►|
               |                       |                       |
-                                                         Notarises the 
+                                                         Notarises the
               |                       |                   transaction
                                                               |
               |◀----------------------------------------------|
               |                       |                       |
-         Records the                                           
+         Records the
          transaction                  |                       |
-              |                                                
+              |
               |----------------------►|                       |
-                                      |                        
+                                      |
               |                  Records the                  |
-                                 transaction                   
+                                 transaction
               |                       |                       |
               ▼                       ▼                       ▼
 
@@ -128,17 +130,13 @@ Once you've finished the CorDapp's code, run it with the following steps:
 * Build a test network of nodes by opening a terminal window at the root of
   your project and running the following command:
 
-    * Windows, Kotlin code: `gradlew.bat deployNodesKotlin`
-    * Windows, Java code:   `gradlew.bat deployNodesJava`
-    * macOS, Kotlin code:   `./gradlew deployNodesKotlin`
-    * macOS, Java code:     `./gradlew deployNodesJava`
+    * Windows:   `gradlew.bat deployNodesJava -Poffline=true`
+    * macOS:     `./gradlew deployNodesJava -Poffline=true`
 
 * Start the nodes by running the following command:
 
-    * Windows, Kotlin code: `kotlin\build\nodes\runnodes.bat`
-    * Windows, Java code:   `java\build\nodes\runnodes.bat`
-    * macOS, Kotlin code:   `kotlin/build/nodes/runnodes`
-    * macOS, Java code:     `java/build/nodes/runnodes`
+    * Windows:   `java\build\nodes\runnodes.bat`
+    * macOS:     `java/build/nodes/runnodes`
 
 * Open the nodes are started, go to the terminal of Party A (not the notary!)
   and run the following command to issue 99 tokens to Party B:
@@ -148,4 +146,4 @@ Once you've finished the CorDapp's code, run it with the following steps:
 * You can now see the tokens in both nodes' vaults by running the following
   command in their respective terminals:
 
-    `run vaultQuery contractStateType: bootcamp.TokenState`
+    `run vaultQuery contractStateType: java_bootcamp.TokenState`

@@ -1,4 +1,4 @@
-package examples
+package kotlin_examples
 
 import net.corda.core.contracts.*
 import net.corda.core.crypto.SecureHash
@@ -7,7 +7,7 @@ import net.corda.core.transactions.LedgerTransaction
 class IAmAContract : Contract {
     companion object {
         // Used to reference the contract in transactions.
-        val CONTRACT_ID = "examples.IAmAContract"
+        val CONTRACT_ID = "kotlin_examples.IAmAContract"
     }
 
     interface Commands: CommandData {

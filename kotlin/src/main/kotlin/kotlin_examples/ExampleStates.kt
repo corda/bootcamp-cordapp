@@ -1,4 +1,4 @@
-package examples
+package kotlin_examples
 
 import net.corda.core.contracts.ContractState
 import net.corda.core.contracts.LinearState
