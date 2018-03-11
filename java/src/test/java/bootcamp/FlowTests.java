@@ -107,7 +107,8 @@ public class FlowTests {
         SignedTransaction signedTransaction = future.get();
 
         assertEquals(0, signedTransaction.getTx().getInputs().size());
-        assertEquals(0, signedTransaction.getTx().getAttachments().size());
+        // The single attachment is the contract attachment.
+        assertEquals(1, signedTransaction.getTx().getAttachments().size());
         assertEquals(null, signedTransaction.getTx().getTimeWindow());
     }
 }
