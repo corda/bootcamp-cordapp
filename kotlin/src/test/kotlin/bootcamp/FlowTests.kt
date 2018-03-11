@@ -101,7 +101,8 @@ class FlowTests {
         val signedTransaction = future.get()
 
         assertEquals(0, signedTransaction.tx.inputs.size)
-        assertEquals(0, signedTransaction.tx.attachments.size)
+        // The single attachment is the contract attachment.
+        assertEquals(1, signedTransaction.tx.attachments.size)
         assertEquals(null, signedTransaction.tx.timeWindow)
     }
 }
