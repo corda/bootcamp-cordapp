@@ -149,13 +149,13 @@ class ContractTests {
             transaction {
                 // Issuer is not a required signer, will fail.
                 output(TokenContract.ID, tokenState)
-                command(bob.publicKey, DummyCommandData)
+                command(bob.publicKey, TokenContract.Issue)
                 fails()
             }
             transaction {
                 // Issuer is also not a required signer, will fail.
                 output(TokenContract.ID, tokenStateWhereBobIsIssuer)
-                command(alice.publicKey, DummyCommandData)
+                command(alice.publicKey, TokenContract.Issue)
                 fails()
             }
             transaction {

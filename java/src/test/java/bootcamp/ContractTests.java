@@ -184,7 +184,7 @@ public class ContractTests {
             ledger.transaction(tx -> {
                 // Issuer is not a required signer, will fail.
                 tx.output(TokenContract.ID, tokenState);
-                tx.command(bob.getPublicKey(), DummyCommandData.INSTANCE);
+                tx.command(bob.getPublicKey(), new TokenContract.Issue());
                 tx.fails();
                 return null;
             });
@@ -192,7 +192,7 @@ public class ContractTests {
             ledger.transaction(tx -> {
                 // Issuer is also not a required signer, will fail.
                 tx.output(TokenContract.ID, tokenStateWhereBobIsIssuer);
-                tx.command(alice.getPublicKey(), DummyCommandData.INSTANCE);
+                tx.command(alice.getPublicKey(), new TokenContract.Issue());
                 tx.fails();
                 return null;
             });
