@@ -10,7 +10,6 @@ buildscript {
         if (project.hasProperty("offline")) {
             flatDir { dirs "lib/dependencies" }
         } else {
-            flatDir { dirs "lib/dependencies" }
             mavenLocal()
             mavenCentral()
             jcenter()
@@ -18,7 +17,9 @@ buildscript {
     }
 
     dependencies {
-        classpath fileTree(dir: 'lib/dependencies', include: '*.jar')
+        if (project.hasProperty("offline")) {
+            classpath fileTree(dir: 'lib/dependencies', include: '*.jar')
+        }
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "net.corda.plugins:cordapp:$corda_gradle_plugins_version"
         classpath "net.corda.plugins:cordformation:$corda_gradle_plugins_version"
@@ -31,7 +32,6 @@ allprojects {
         if (project.hasProperty("offline")) {
             flatDir { dirs "${project.rootProject.projectDir}/lib/dependencies" }
         } else {
-            flatDir { dirs "${project.rootProject.projectDir}/lib/dependencies" }
             mavenLocal()
             jcenter()
             mavenCentral()
