@@ -17,10 +17,8 @@ sourceSets {
 }
 
 dependencies {
-    if (project.hasProperty("offline")) {
-        classpath fileTree(dir: '../lib/dependencies', include: '*.jar')
-    }
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    compileClasspath fileTree(dir: '../lib/dependencies', include: '*.jar')
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
     testCompile "junit:junit:$junit_version"
 

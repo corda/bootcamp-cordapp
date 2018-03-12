@@ -17,9 +17,7 @@ sourceSets {
 }
 
 dependencies {
-    if (project.hasProperty("offline")) {
-        classpath fileTree(dir: '../lib/dependencies', include: '*.jar')
-    }
+    compileClasspath fileTree(dir: '../lib/dependencies', include: '*.jar')
     testCompile "junit:junit:$junit_version"
 
     cordaCompile "$corda_release_group:corda-core:$corda_release_version"

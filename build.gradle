@@ -17,13 +17,11 @@ buildscript {
     }
 
     dependencies {
-        if (project.hasProperty("offline")) {
-            classpath fileTree(dir: 'lib/dependencies', include: '*.jar')
-        }
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath fileTree(dir: 'lib/dependencies', include: '*.jar')
         classpath "net.corda.plugins:cordapp:$corda_gradle_plugins_version"
         classpath "net.corda.plugins:cordformation:$corda_gradle_plugins_version"
         classpath "net.corda.plugins:quasar-utils:$corda_gradle_plugins_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
@@ -39,4 +37,9 @@ allprojects {
             maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
         }
     }
+}
+
+task gatherDependencies(type: Copy) {
+    into "lib/dependencies"
+    from buildscript.configurations.classpath
 }
