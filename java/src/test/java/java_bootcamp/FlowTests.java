@@ -11,7 +11,6 @@
 //import org.junit.Before;
 //import org.junit.Test;
 //
-//import static net.corda.testing.node.NodeTestUtils.startFlow;
 //import static org.junit.Assert.assertEquals;
 //
 //public class FlowTests {
@@ -35,7 +34,7 @@
 //    @Test
 //    public void transactionConstructedByFlowUsesTheCorrectNotary() throws Exception {
 //        TokenFlow flow = new TokenFlow(b.getInfo().getLegalIdentities().get(0), 99);
-//        CordaFuture<SignedTransaction> future = startFlow(a.getServices(), flow);
+//        CordaFuture<SignedTransaction> future = a.startFlow(flow);
 //        network.runNetwork();
 //        SignedTransaction signedTransaction = future.get();
 //
@@ -48,7 +47,7 @@
 //    @Test
 //    public void transactionConstructedByFlowHasOneTokenStateOutputWithTheCorrectAmountAndRecipient() throws Exception {
 //        TokenFlow flow = new TokenFlow(b.getInfo().getLegalIdentities().get(0), 99);
-//        CordaFuture<SignedTransaction> future = startFlow(a.getServices(), flow);
+//        CordaFuture<SignedTransaction> future = a.startFlow(flow);
 //        network.runNetwork();
 //        SignedTransaction signedTransaction = future.get();
 //
@@ -62,7 +61,7 @@
 //    @Test
 //    public void transactionConstructedByFlowHasOneOutputUsingTheCorrectContract() throws Exception {
 //        TokenFlow flow = new TokenFlow(b.getInfo().getLegalIdentities().get(0), 99);
-//        CordaFuture<SignedTransaction> future = startFlow(a.getServices(), flow);
+//        CordaFuture<SignedTransaction> future = a.startFlow(flow);
 //        network.runNetwork();
 //        SignedTransaction signedTransaction = future.get();
 //
@@ -75,7 +74,7 @@
 //    @Test
 //    public void transactionConstructedByFlowHasOneIssueCommand() throws Exception {
 //        TokenFlow flow = new TokenFlow(b.getInfo().getLegalIdentities().get(0), 99);
-//        CordaFuture<SignedTransaction> future = startFlow(a.getServices(), flow);
+//        CordaFuture<SignedTransaction> future = a.startFlow(flow);
 //        network.runNetwork();
 //        SignedTransaction signedTransaction = future.get();
 //
@@ -88,7 +87,7 @@
 //    @Test
 //    public void transactionConstructedByFlowHasOneCommandWithTheIssueAsASigner() throws Exception {
 //        TokenFlow flow = new TokenFlow(b.getInfo().getLegalIdentities().get(0), 99);
-//        CordaFuture<SignedTransaction> future = startFlow(a.getServices(), flow);
+//        CordaFuture<SignedTransaction> future = a.startFlow(flow);
 //        network.runNetwork();
 //        SignedTransaction signedTransaction = future.get();
 //
@@ -102,7 +101,7 @@
 //    @Test
 //    public void transactionConstructedByFlowHasNoInputsAttachmentsOrTimewindows() throws Exception {
 //        TokenFlow flow = new TokenFlow(b.getInfo().getLegalIdentities().get(0), 99);
-//        CordaFuture<SignedTransaction> future = startFlow(a.getServices(), flow);
+//        CordaFuture<SignedTransaction> future = a.startFlow(flow);
 //        network.runNetwork();
 //        SignedTransaction signedTransaction = future.get();
 //

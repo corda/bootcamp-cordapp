@@ -1,9 +1,8 @@
 //package kotlin_bootcamp
 //
-//import net.corda.testing.core.chooseIdentity
+//import net.corda.testing.internal.chooseIdentity
 //import net.corda.testing.node.MockNetwork
 //import net.corda.testing.node.StartedMockNode
-//import net.corda.testing.node.startFlow
 //import org.junit.After
 //import org.junit.Before
 //import org.junit.Test
@@ -30,7 +29,7 @@
 //    @Test
 //    fun `transaction constructed by flow uses the correct notary`() {
 //        val flow = TokenFlow(b.info.chooseIdentity(), 99)
-//        val future = a.services.startFlow(flow)
+//        val future = a.startFlow(flow)
 //        network.runNetwork()
 //        val signedTransaction = future.get()
 //
@@ -43,7 +42,7 @@
 //    @Test
 //    fun `transaction constructed by flow has one TokenState output with the correct amount and recipient`() {
 //        val flow = TokenFlow(b.info.chooseIdentity(), 99)
-//        val future = a.services.startFlow(flow)
+//        val future = a.startFlow(flow)
 //        network.runNetwork()
 //        val signedTransaction = future.get()
 //
@@ -57,7 +56,7 @@
 //    @Test
 //    fun `transaction constructed by flow has one output using the correct contract`() {
 //        val flow = TokenFlow(b.info.chooseIdentity(), 99)
-//        val future = a.services.startFlow(flow)
+//        val future = a.startFlow(flow)
 //        network.runNetwork()
 //        val signedTransaction = future.get()
 //
@@ -70,7 +69,7 @@
 //    @Test
 //    fun `transaction constructed by flow has one Issue command`() {
 //        val flow = TokenFlow(b.info.chooseIdentity(), 99)
-//        val future = a.services.startFlow(flow)
+//        val future = a.startFlow(flow)
 //        network.runNetwork()
 //        val signedTransaction = future.get()
 //
@@ -83,7 +82,7 @@
 //    @Test
 //    fun `transaction constructed by flow has one command with the issuer as a signer`() {
 //        val flow = TokenFlow(b.info.chooseIdentity(), 99)
-//        val future = a.services.startFlow(flow)
+//        val future = a.startFlow(flow)
 //        network.runNetwork()
 //        val signedTransaction = future.get()
 //
@@ -96,7 +95,7 @@
 //    @Test
 //    fun `transaction constructed by flow has no inputs, attachments or timewindows`() {
 //        val flow = TokenFlow(b.info.chooseIdentity(), 99)
-//        val future = a.services.startFlow(flow)
+//        val future = a.startFlow(flow)
 //        network.runNetwork()
 //        val signedTransaction = future.get()
 //
