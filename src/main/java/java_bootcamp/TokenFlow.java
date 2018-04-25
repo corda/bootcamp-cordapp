@@ -38,7 +38,7 @@ public class TokenFlow extends FlowLogic<SignedTransaction> {
         // We check our transaction is valid based on its contracts.
         transactionBuilder.verify(getServiceHub());
 
-        // We sign the transaction with our public key, making it immutable.
+        // We sign the transaction with our private key, making it immutable.
         SignedTransaction signedTransaction = getServiceHub().signInitialTransaction(transactionBuilder);
 
         // We get the transaction notarised and recorded automatically by the platform.
