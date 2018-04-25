@@ -11,12 +11,12 @@ import net.corda.core.utilities.ProgressTracker;
  * See src/main/java/examples/IAmAFlowPair.java for an example. */
 @InitiatingFlow
 @StartableByRPC
-public class TokenFlow extends FlowLogic<SignedTransaction> {
+public class TokenIssueFlow extends FlowLogic<SignedTransaction> {
     private final ProgressTracker progressTracker = new ProgressTracker();
     private final Party recipient;
     private final int amount;
 
-    public TokenFlow(Party recipient, int amount) {
+    public TokenIssueFlow(Party recipient, int amount) {
         this.recipient = recipient;
         this.amount = amount;
     }
