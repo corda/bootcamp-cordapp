@@ -47,7 +47,7 @@ public class ContractTests {
 //        });
 //
 //        transaction(ledgerServices, tx -> {
-//            // Has one input, will verify.
+//            // Has one output, will verify.
 //            tx.output(TokenContract.ID, tokenState);
 //            tx.command(alice.getPublicKey(), new TokenContract.Issue());
 //            tx.verifies();
