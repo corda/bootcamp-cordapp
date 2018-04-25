@@ -10,5 +10,4 @@
 build
 lib/dependencies/
 .DS_Store
-java/out/
-kotlin/out/
+out
