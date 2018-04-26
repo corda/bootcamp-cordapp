@@ -22,13 +22,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: net.corda:corda:corda-3.0" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.jolokia:jolokia-jvm:agent:1.3.7" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: co.paralleluniverse:quasar-core:jdk8:0.7.9" level="project" />
-    <orderEntry type="library" name="Gradle: net.corda:corda-test-utils:corda-3.0" level="project" />
-    <orderEntry type="library" name="Gradle: net.corda:corda-node-api:corda-3.0" level="project" />
-    <orderEntry type="library" name="Gradle: net.corda:corda-core:corda-3.0" level="project" />
-    <orderEntry type="library" name="Gradle: net.corda:corda-rpc:corda-3.0" level="project" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>
@@ -1595,6 +1588,13 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: net.corda:corda:corda-3.0" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.jolokia:jolokia-jvm:agent:1.3.7" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: co.paralleluniverse:quasar-core:jdk8:0.7.9" level="project" />
+    <orderEntry type="library" name="Gradle: net.corda:corda-test-utils:corda-3.0" level="project" />
+    <orderEntry type="library" name="Gradle: net.corda:corda-node-api:corda-3.0" level="project" />
+    <orderEntry type="library" name="Gradle: net.corda:corda-core:corda-3.0" level="project" />
+    <orderEntry type="library" name="Gradle: net.corda:corda-rpc:corda-3.0" level="project" />
     <orderEntry type="library" name="Gradle: net.corda:corda-node-driver:corda-3.0" level="project" />
     <orderEntry type="library" name="Gradle: net.corda:corda-jackson:corda-3.0" level="project" />
     <orderEntry type="module-library">
