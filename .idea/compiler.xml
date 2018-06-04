@@ -2,14 +2,10 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
-      <module name="bootcamp-cordapp_copy_main" target="1.8" />
-      <module name="bootcamp-cordapp_copy_test" target="1.8" />
       <module name="bootcamp-cordapp_main" target="1.8" />
       <module name="bootcamp-cordapp_test" target="1.8" />
       <module name="java_main" target="1.8" />
       <module name="java_test" target="1.8" />
-      <module name="kotlin_main" target="1.8" />
-      <module name="kotlin_test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
