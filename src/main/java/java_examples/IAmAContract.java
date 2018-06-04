@@ -40,7 +40,7 @@ public class IAmAContract implements Contract {
             // 1st type of checking - "shape" of the transaction:
             // **************************************************
             require.using("There are five input states", tx.getInputs().size() == 5);
-            require.using("There are four output states", tx.getInputs().size() == 4);
+            require.using("There are four output states", tx.getOutputs().size() == 4);
             require.using("There are three commands", tx.getCommands().size() == 3);
             require.using("There are two attachments", tx.getAttachments().size() == 2);
             require.using("There is a timestamp", tx.getTimeWindow() != null);
