@@ -6,11 +6,11 @@ buildscript {
     ext.quasar_version = '0.7.9'
 
     repositories {
-//        mavenLocal()
-//        mavenCentral()
-//        jcenter()
-//        maven { url 'https://jitpack.io' }
-//        maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+        maven { url 'https://jitpack.io' }
+        maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
         flatDir { dirs "lib/dependencies" }
     }
 
@@ -23,11 +23,11 @@ buildscript {
 }
 
 repositories {
-//    mavenLocal()
-//    jcenter()
-//    mavenCentral()
-//    maven { url 'https://jitpack.io' }
-//    maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
+    mavenLocal()
+    jcenter()
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+    maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
     flatDir { dirs "${project.rootProject.projectDir}/lib/dependencies" }
 }
 
