@@ -135,8 +135,8 @@ Once you've finished the CorDapp's code, run it with the following steps:
 
 * Start the nodes by running the following command:
 
-    * Windows:   `java\build\nodes\runnodes.bat`
-    * macOS:     `java/build/nodes/runnodes`
+    * Windows:   `build\nodes\runnodes.bat`
+    * macOS:     `build/nodes/runnodes`
 
 * Open the nodes are started, go to the terminal of Party A (not the notary!)
   and run the following command to issue 99 tokens to Party B:
