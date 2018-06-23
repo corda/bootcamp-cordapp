@@ -79,9 +79,9 @@ involving TokenStates:
 * The command is an Issue command
 * The command lists the TokenState's issuer as a required signer
 
-### The TokenFlow
+### The TokenIssueFlow
 
-Flows automate the process of updating the ledger. Our flow, TokenFlow, will
+Flows automate the process of updating the ledger. Our flow, TokenIssueFlow, will
 automate the following steps:
 
             Issuer                Recipient                Notary
@@ -141,7 +141,7 @@ Once you've finished the CorDapp's code, run it with the following steps:
 * Open the nodes are started, go to the terminal of Party A (not the notary!)
   and run the following command to issue 99 tokens to Party B:
 
-    `flow start TokenFlow recipient: PartyB, amount: 99`
+    `flow start TokenIssueFlow recipient: PartyB, amount: 99`
 
 * You can now see the tokens in both nodes' vaults by running the following
   command in their respective terminals:
