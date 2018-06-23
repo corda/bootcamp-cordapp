@@ -40,7 +40,7 @@ token. It will have the following structure:
     |   TokenState    |
     |                 |
     |   - issuer      |
-    |   - recipient   |
+    |   - owner       |
     |   - amount      |
     |                 |
     -------------------
@@ -58,7 +58,7 @@ TokenState transaction:
     |    |                 |                       | -►          |   TokenState    |    |
     |            NO             -------------------     -►       |                 |    |
     |    |                 |    |      Issue command       -►    |   - issuer      |    |
-    |          INPUTS           |     signed by issuer     -►    |   - recipient   |    |
+    |          INPUTS           |     signed by issuer     -►    |   - owner       |    |
     |    |                 |    -------------------     -►       |   - amount > 0  |    |
     |                                              | -►          |                 |    |
     |    - - - - - - - - - -                       ▼             -------------------    |
@@ -84,7 +84,7 @@ involving TokenStates:
 Flows automate the process of updating the ledger. Our flow, TokenIssueFlow, will
 automate the following steps:
 
-            Issuer                Recipient                Notary
+            Issuer                  Owner                  Notary
               |                       |                       |
        Chooses a notary
               |                       |                       |
@@ -141,7 +141,7 @@ Once you've finished the CorDapp's code, run it with the following steps:
 * Open the nodes are started, go to the terminal of Party A (not the notary!)
   and run the following command to issue 99 tokens to Party B:
 
-    `flow start TokenIssueFlow recipient: PartyB, amount: 99`
+    `flow start TokenIssueFlow owner: PartyB, amount: 99`
 
 * You can now see the tokens in both nodes' vaults by running the following
   command in their respective terminals:

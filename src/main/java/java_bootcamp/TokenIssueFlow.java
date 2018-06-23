@@ -13,11 +13,11 @@ import net.corda.core.utilities.ProgressTracker;
 @StartableByRPC
 public class TokenIssueFlow extends FlowLogic<SignedTransaction> {
     private final ProgressTracker progressTracker = new ProgressTracker();
-    private final Party recipient;
+    private final Party owner;
     private final int amount;
 
-    public TokenIssueFlow(Party recipient, int amount) {
-        this.recipient = recipient;
+    public TokenIssueFlow(Party owner, int amount) {
+        this.owner = owner;
         this.amount = amount;
     }
 

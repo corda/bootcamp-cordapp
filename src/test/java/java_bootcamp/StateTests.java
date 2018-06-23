@@ -12,15 +12,15 @@ public class StateTests {
     private final Party bob = new TestIdentity(new CordaX500Name("Bob", "", "GB")).getParty();
 
 //    @Test
-//    public void tokenStateHasIssuerRecipientAndAmountFieldsOfTheCorrectType() {
+//    public void tokenStateHasIssuerOwnerAndAmountFieldsOfTheCorrectType() {
 //        new TokenState(alice, bob, 1);
 //    }
 
 //    @Test
-//    public void tokenStateHasGettersForIssuerRecipientAndAmount() {
+//    public void tokenStateHasGettersForIssuerOwnerAndAmount() {
 //        TokenState tokenState = new TokenState(alice, bob, 1);
 //        assertEquals(alice, tokenState.getIssuer());
-//        assertEquals(bob, tokenState.getRecipient());
+//        assertEquals(bob, tokenState.getOwner());
 //        assertEquals(1, tokenState.getAmount());
 //    }
 
@@ -30,7 +30,7 @@ public class StateTests {
 //    }
 
 //    @Test
-//    public void tokenStateHasTwoParticipantsTheIssuerAndTheRecipient() {
+//    public void tokenStateHasTwoParticipantsTheIssuerAndTheOwner() {
 //        TokenState tokenState = new TokenState(alice, bob, 1);
 //        assertEquals(2, tokenState.getParticipants().size());
 //        assert(tokenState.getParticipants().contains(alice));

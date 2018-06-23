@@ -45,7 +45,7 @@ public class FlowTests {
 //    }
 
 //    @Test
-//    public void transactionConstructedByFlowHasOneTokenStateOutputWithTheCorrectAmountAndRecipient() throws Exception {
+//    public void transactionConstructedByFlowHasOneTokenStateOutputWithTheCorrectAmountAndOwner() throws Exception {
 //        TokenIssueFlow flow = new TokenIssueFlow(nodeB.getInfo().getLegalIdentities().get(0), 99);
 //        CordaFuture<SignedTransaction> future = nodeA.startFlow(flow);
 //        network.runNetwork();
@@ -54,7 +54,7 @@ public class FlowTests {
 //        assertEquals(1, signedTransaction.getTx().getOutputStates().size());
 //        TokenState output = signedTransaction.getTx().outputsOfType(TokenState.class).get(0);
 //
-//        assertEquals(nodeB.getInfo().getLegalIdentities().get(0), output.getRecipient());
+//        assertEquals(nodeB.getInfo().getLegalIdentities().get(0), output.getOwner());
 //        assertEquals(99, output.getAmount());
 //    }
 
