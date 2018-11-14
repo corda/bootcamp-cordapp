@@ -1,4 +1,6 @@
-![Corda](https://www.corda.net/wp-content/uploads/2016/11/fg005_corda_b.png)
+<p align="center">
+  <img src="https://www.corda.net/wp-content/uploads/2016/11/fg005_corda_b.png" alt="Corda" width="500">
+</p>
 
 # Bootcamp CorDapp
 
@@ -166,7 +168,7 @@ Once you've finished the CorDapp's code, run it with the following steps:
 
     `run vaultQuery contractStateType: java_bootcamp.TokenState`
 
-## Updating for offline line
+## Updating for offline use
 
 * Run the `gatherDependencies` Gradle task from the root of the project to 
   gather all the CorDapp's dependencies in `lib/dependencies`
