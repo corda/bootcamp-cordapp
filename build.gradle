@@ -1,9 +1,9 @@
 buildscript {
     ext.corda_release_group = 'net.corda'
-    ext.corda_release_version = 'corda-3.0'
-    ext.corda_gradle_plugins_version = '3.0.9'
+    ext.corda_release_version = '4.0'
+    ext.corda_gradle_plugins_version = '4.0.42'
     ext.junit_version = '4.12'
-    ext.quasar_version = '0.7.9'
+    ext.quasar_version = '0.7.10'
 
     repositories {
         mavenLocal()
@@ -67,15 +67,37 @@ tasks.withType(JavaCompile) {
     options.compilerArgs << "-parameters" // Required for shell commands.
 }
 
+cordapp {
+    targetPlatformVersion 4
+    minimumPlatformVersion 4
+    contract {
+        name "Bootcamp Contracts"
+        vendor "R3"
+        licence "A liberal, open source licence"
+        versionId 1
+    }
+    workflow {
+        name "Bootcamp Flows"
+        vendor "R3"
+        licence "A really expensive proprietary licence"
+        versionId 1
+    }
+}
+
 task deployNodesJava(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
+    nodeDefaults {
+        projectCordapp { deploy = true }
+    }
     directory "./build/nodes"
     node {
         name "O=Notary,L=London,C=GB"
         notary = [validating: false]
-        p2pPort 10002
-        cordapps = [
-                "$project.group:cordapp:$project.version"
-        ]
+        p2pPort 10000
+        cordapps = []
+        rpcSettings {
+            address("localhost:10001")
+            adminAddress("localhost:10002")
+        }
     }
     node {
         name "O=PartyA,L=London,C=GB"
@@ -84,9 +106,6 @@ task deployNodesJava(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
             address("localhost:10004")
             adminAddress("localhost:10005")
         }
-        cordapps = [
-                "$project.group:cordapp:$project.version"
-        ]
         rpcUsers = [[user: "user1", password: "test", permissions: ["ALL"]]]
     }
     node {
@@ -96,9 +115,6 @@ task deployNodesJava(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
             address("localhost:10007")
             adminAddress("localhost:10008")
         }
-        cordapps = [
-                "$project.group:cordapp:$project.version"
-        ]
         rpcUsers = [[user: "user1", password: "test", permissions: ["ALL"]]]
     }
     node {
@@ -108,9 +124,6 @@ task deployNodesJava(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
             address("localhost:10010")
             adminAddress("localhost:10011")
         }
-        cordapps = [
-                "$project.group:cordapp:$project.version"
-        ]
         rpcUsers = [[user: "user1", password: "test", permissions: ["ALL"]]]
     }
 }
