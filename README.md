@@ -8,11 +8,11 @@ This project is the template we will use as a basis for developing a complete Co
 during today's bootcamp. Our CorDapp will allow the issuance of tokens onto the ledger.
 
 We'll develop the CorDapp using a test-driven approach. At each stage, you'll know your 
-CorDapp is working once it passes both sets of tests defined in `src/test/java/java_bootcamp`.
+CorDapp is working once it passes both sets of tests defined in `src/test/java/bootcamp`.
 
 ## Set up
 
-1. Download and install Oracle JDK 8 JVM (minimum supported version 8u131)
+1. Download and install a JDK 8 JVM (minimum supported version 8u131)
 2. Download and install IntelliJ Community Edition (supported versions 2017.x and 2018.x)
 3. Download the bootcamp-cordapp repository:
 
@@ -166,7 +166,7 @@ Once you've finished the CorDapp's code, run it with the following steps:
 * You can now see the tokens in the vaults of Party A and Party B (but not 
   Party C!) by running the following command in their respective terminals:
 
-    `run vaultQuery contractStateType: java_bootcamp.TokenState`
+    `run vaultQuery contractStateType: bootcamp.TokenState`
 
 ## Updating for offline use
 

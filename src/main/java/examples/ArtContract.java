@@ -1,4 +1,4 @@
-package java_examples;
+package examples;
 
 import net.corda.core.contracts.*;
 import net.corda.core.transactions.LedgerTransaction;
@@ -11,7 +11,7 @@ import static net.corda.core.contracts.ContractsDSL.requireSingleCommand;
 // Like all contracts, implements `Contract`.
 public class ArtContract implements Contract {
     // Used to reference the contract in transactions.
-    public static final String ID = "java_examples.ArtContract";
+    public static final String ID = "examples.ArtContract";
 
     public interface Commands extends CommandData {
         class Issue implements Commands { }

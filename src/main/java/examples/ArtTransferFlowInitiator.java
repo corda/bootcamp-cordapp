@@ -1,4 +1,4 @@
-package java_examples;
+package examples;
 
 import co.paralleluniverse.fibers.Suspendable;
 import com.google.common.collect.ImmutableList;
@@ -12,12 +12,10 @@ import net.corda.core.utilities.ProgressTracker;
 
 import java.security.PublicKey;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.google.common.collect.Iterables.find;
 
-// `InitiatingFlow` means that we can start the flow directly (instead of
+// `TokenIssueFlowInitiator` means that we can start the flow directly (instead of
 // solely in response to another flow).
 @InitiatingFlow
 // `StartableByRPC` means that a node operator can start the flow via RPC.

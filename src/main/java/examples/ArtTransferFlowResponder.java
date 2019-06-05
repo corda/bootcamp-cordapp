@@ -1,4 +1,4 @@
-package java_examples;
+package examples;
 
 import co.paralleluniverse.fibers.Suspendable;
 import net.corda.core.flows.*;
