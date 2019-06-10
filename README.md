@@ -177,3 +177,15 @@ Once you've finished the CorDapp's code, run it with the following steps:
   `distributionUrl=gradle-4.4.1-all.zip`)
 * In `build.gradle`, under both `repositories` blocks, comment out any 
   repositories other than `flatDir { ... }`
+
+
+# Resources
+
+The following resources will be useful in completing the exercises:
+
+* The [Key Concepts documentation](https://docs.corda.net/key-concepts.html)
+* The [API docs](https://docs.corda.net/corda-api.html)
+* Our [StackOverflow questions and answers](https://stackoverflow.com/questions/tagged/corda)
+* The following IntelliJ shortcuts:
+  * Double-tap shift: [search everywhere](https://www.jetbrains.com/help/idea/searching-everywhere.html)
+  * Ctrl/cmd + click on function/class name: [navigate to declaration](https://www.jetbrains.com/help/decompiler/Navigation_and_Search__Go_to_Declaration.html)
