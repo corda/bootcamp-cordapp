@@ -108,7 +108,7 @@ public class ArtTransferFlowInitiator extends FlowLogic<Void> {
         // We use `FinalityFlow` to automatically notarise the transaction
         // and have it recorded by all the `participants` of all the
         // transaction's states.
-        subFlow(new FinalityFlow(fullySignedTx));
+        subFlow(new FinalityFlow(fullySignedTx, ownerSession));
 
         return null;
     }
