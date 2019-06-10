@@ -13,8 +13,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class FlowTests {
     private MockNetwork network;
@@ -25,7 +26,7 @@ public class FlowTests {
     public void setup() {
         network = new MockNetwork(
                 new MockNetworkParameters(
-                        Arrays.asList(TestCordapp.findCordapp("bootcamp"))
+                        Collections.singletonList(TestCordapp.findCordapp("bootcamp"))
                 )
         );
         nodeA = network.createPartyNode(null);
@@ -92,7 +93,7 @@ public class FlowTests {
     }
 
     @Test
-    public void transactionConstructedByFlowHasOneCommandWithTheIssueAsASigner() throws Exception {
+    public void transactionConstructedByFlowHasOneCommandWithTheIssuerAndTheOwnerAsASigners() throws Exception {
         TokenIssueFlowInitiator flow = new TokenIssueFlowInitiator(nodeB.getInfo().getLegalIdentities().get(0), 99);
         CordaFuture<SignedTransaction> future = nodeA.startFlow(flow);
         network.runNetwork();
@@ -101,8 +102,9 @@ public class FlowTests {
         assertEquals(1, signedTransaction.getTx().getCommands().size());
         Command command = signedTransaction.getTx().getCommands().get(0);
 
-        assertEquals(1, command.getSigners().size());
-        assert (command.getSigners().contains(nodeA.getInfo().getLegalIdentities().get(0).getOwningKey()));
+        assertEquals(2, command.getSigners().size());
+        assertTrue(command.getSigners().contains(nodeA.getInfo().getLegalIdentities().get(0).getOwningKey()));
+        assertTrue(command.getSigners().contains(nodeB.getInfo().getLegalIdentities().get(0).getOwningKey()));
     }
 
     @Test
@@ -115,6 +117,6 @@ public class FlowTests {
         assertEquals(0, signedTransaction.getTx().getInputs().size());
         // The single attachment is the contract attachment.
         assertEquals(1, signedTransaction.getTx().getAttachments().size());
-        assertEquals(null, signedTransaction.getTx().getTimeWindow());
+        assertNull(signedTransaction.getTx().getTimeWindow());
     }
 }
