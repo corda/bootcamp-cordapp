@@ -1,6 +1,6 @@
 # TokenState
 
-    package solutions;
+    package bootcamp;
     
     import net.corda.core.contracts.BelongsToContract;
     import net.corda.core.contracts.ContractState;
@@ -51,7 +51,7 @@
 
 # TokenContract
 
-    package solutions;
+    package bootcamp;
     
     import net.corda.core.contracts.CommandData;
     import net.corda.core.contracts.CommandWithParties;
@@ -99,7 +99,7 @@
 
 # TokenIssueFlowInitiator
 
-    package solutions;
+    package bootcamp;
     
     import co.paralleluniverse.fibers.Suspendable;
     import net.corda.core.contracts.CommandData;
