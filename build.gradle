@@ -6,12 +6,10 @@ buildscript {
     ext.quasar_version = '0.7.10'
 
     repositories {
-        mavenLocal()
         mavenCentral()
         jcenter()
         maven { url 'https://jitpack.io' }
         maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
-        flatDir { dirs "lib/dependencies" }
     }
 
     dependencies {
@@ -23,12 +21,10 @@ buildscript {
 }
 
 repositories {
-    mavenLocal()
     jcenter()
     mavenCentral()
     maven { url 'https://jitpack.io' }
     maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
-    flatDir { dirs "${project.rootProject.projectDir}/lib/dependencies" }
 }
 
 apply plugin: 'java'
@@ -36,22 +32,8 @@ apply plugin: 'net.corda.plugins.cordapp'
 apply plugin: 'net.corda.plugins.cordformation'
 apply plugin: 'net.corda.plugins.quasar-utils'
 
-sourceSets {
-    main {
-        resources {
-            srcDir "../config/dev"
-        }
-    }
-    test {
-        resources {
-            srcDir "../config/test"
-        }
-    }
-}
 
 dependencies {
-    compileClasspath fileTree(dir: 'lib/dependencies', include: '*.jar')
-
     cordaCompile "$corda_release_group:corda-core:$corda_release_version"
     cordaCompile "$corda_release_group:corda-jackson:$corda_release_version"
     cordaCompile "$corda_release_group:corda-rpc:$corda_release_version"
@@ -84,11 +66,10 @@ cordapp {
     }
 }
 
-task deployNodesJava(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
+task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
     nodeDefaults {
         projectCordapp { deploy = true }
     }
-    directory "./build/nodes"
     node {
         name "O=Notary,L=London,C=GB"
         notary = [validating: false]
@@ -126,14 +107,4 @@ task deployNodesJava(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
         }
         rpcUsers = [[user: "user1", password: "test", permissions: ["ALL"]]]
     }
-}
-
-task gatherDependencies(type: Copy) {
-    into "lib/dependencies"
-    from buildscript.configurations.classpath
-    from configurations.runtime
-    from configurations.compile
-    from configurations.testCompile
-    from configurations.testRuntime
-    from configurations.quasar
 }
