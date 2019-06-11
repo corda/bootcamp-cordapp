@@ -167,13 +167,3 @@ Once you've finished the CorDapp's code, run it with the following steps:
   Party C!) by running the following command in their respective terminals:
 
     `run vaultQuery contractStateType: bootcamp.TokenState`
-
-## Updating for offline use
-
-* Run the `gatherDependencies` Gradle task from the root of the project to 
-  gather all the CorDapp's dependencies in `lib/dependencies`
-* Update `gradle/wrapper/gradle-wrapper.properties` to point to a local Gradle 
-  distribution (e.g. 
-  `distributionUrl=gradle-4.4.1-all.zip`)
-* In `build.gradle`, under both `repositories` blocks, comment out any 
-  repositories other than `flatDir { ... }`
