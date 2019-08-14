@@ -41,3 +41,16 @@ Here is a list of common issues encountered during the bootcamp, and how to fix 
   * **Cause**: Your terminal is using the wrong version of Java
 
   * **Fix**: Repoint your terminal to use Java 8 (e.g. "export JAVA_HOME=`/usr/libexec/java_home -v 1.8`" on macOS)
+
+* `Command line is too long. Shorten command line for ---- or also for JUnit default configuration.`
+
+  * **Cause**: You're running the tests through junit which has limitations on the length of the commands you can send
+
+  * **Fix**: Click the Run/Debug configuration drop down > `Edit Configurations...` > `+` > `Gradle`
+    In the form that appears, fill in:
+
+    Gradle-Project : `[path to your project]`
+
+    Task: `:cleanTest :test`
+
+    Arguments: `--tests "bootcamp.StateTests"` (or ContractTests or FlowTests)
