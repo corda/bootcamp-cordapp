@@ -150,8 +150,8 @@ Once you've finished the CorDapp's code, run it with the following steps:
 * Build a test network of nodes by opening a terminal window at the root of
   your project and running the following command:
 
-    * Windows:   `gradlew.bat deployNodesJava`
-    * macOS:     `./gradlew deployNodesJava`
+    * Windows:   `gradlew.bat deployNodes`
+    * macOS:     `./gradlew deployNodes`
 
 * Start the nodes by running the following command:
 
