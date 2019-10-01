@@ -1,23 +1,27 @@
 package bootcamp;
 
-import co.paralleluniverse.fibers.Suspendable;
 import net.corda.core.contracts.CommandData;
+import net.corda.core.contracts.StateAndRef;
 import net.corda.core.flows.*;
 import net.corda.core.identity.Party;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 import net.corda.core.utilities.ProgressTracker;
 
+import java.util.Arrays;
+
 import static java.util.Collections.singletonList;
 
 @InitiatingFlow
 @StartableByRPC
-public class TokenIssueFlowInitiator extends FlowLogic<SignedTransaction> {
-    private final Party owner;
+public class TokenTransferFlowInitiator extends FlowLogic<SignedTransaction> {
+    private final StateAndRef<TokenState> token;
+    private final Party target;
     private final int amount;
 
-    public TokenIssueFlowInitiator(Party owner, int amount) {
-        this.owner = owner;
+    public TokenTransferFlowInitiator(StateAndRef<TokenState> token, Party target, int amount) {
+        this.token = token;
+        this.target = target;
         this.amount = amount;
     }
 
@@ -28,29 +32,31 @@ public class TokenIssueFlowInitiator extends FlowLogic<SignedTransaction> {
         return progressTracker;
     }
 
-    @Suspendable
     @Override
     public SignedTransaction call() throws FlowException {
+
         Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
+        Party owner = getOurIdentity();
+        Party issuer = token.getState().getData().getIssuer();
+        int tokenValue = token.getState().getData().getAmount();
 
-        Party issuer = getOurIdentity();
+        // Amount must not exceed value in token
+        if (amount > tokenValue) throw new FlowException("Amount higher than token value");
 
-        TokenState tokenState = new TokenState(issuer, owner, amount);
+        CommandData commandData = new TokenContract.Commands.Transfer();
 
         TransactionBuilder transactionBuilder = new TransactionBuilder(notary);
-
-        CommandData commandData = new TokenContract.Commands.Issue();
-
-        transactionBuilder.addCommand(commandData, issuer.getOwningKey(), owner.getOwningKey());
-
-        transactionBuilder.addOutputState(tokenState, TokenContract.ID);
-
+        transactionBuilder.addCommand(commandData, Arrays.asList(issuer.getOwningKey(), owner.getOwningKey(), target.getOwningKey()));
+        transactionBuilder.addInputState(token);
+        transactionBuilder.addOutputState(new TokenState(issuer, target, amount));
+        if (amount < tokenValue) { // assign remaining value back to owner
+            transactionBuilder.addOutputState(new TokenState(issuer, owner, (tokenValue-amount)));
+        }
         transactionBuilder.verify(getServiceHub());
 
         FlowSession session = initiateFlow(owner);
 
         SignedTransaction signedTransaction = getServiceHub().signInitialTransaction(transactionBuilder);
-
         SignedTransaction fullySignedTransaction = subFlow(new CollectSignaturesFlow(signedTransaction, singletonList(session)));
 
         return subFlow(new FinalityFlow(fullySignedTransaction, singletonList(session)));
