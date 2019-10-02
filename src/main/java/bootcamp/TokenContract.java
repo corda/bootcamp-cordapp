@@ -66,7 +66,18 @@ public class TokenContract implements Contract {
                 req.using("Target/New-Owner must be a required signer.", command.getSigners().contains(output1.getOwner().getOwningKey()));
                 return null;
             });
-        } else {
+        } else if (command.getValue() instanceof TokenContract.Commands.Finalize) {
+            requireThat(req ->  {
+                req.using("Transaction must have exactly one input", inputs.size() == 1);
+                req.using("Input must be a TokenState", inputs.get(0) instanceof TokenState);
+                req.using("Transaction must have no output states", outputs.isEmpty());
+                TokenState input = (TokenState) inputs.get(0);
+                req.using("Issuer must be a required signer", command.getSigners().contains(input.getIssuer().getOwningKey()));
+                req.using("Owner must be a required signer", command.getSigners().contains(input.getOwner().getOwningKey()));
+                return null;
+            });
+        }
+        else {
             throw new IllegalArgumentException("Unrecognized command");
         }
     }
@@ -75,6 +86,8 @@ public class TokenContract implements Contract {
         class Issue implements Commands {
         }
         class Transfer implements Commands {
+        }
+        class Finalize implements Commands {
         }
     }
 }
