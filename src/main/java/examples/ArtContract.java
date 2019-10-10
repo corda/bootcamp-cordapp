@@ -1,6 +1,8 @@
 package examples;
 
-import net.corda.core.contracts.*;
+import net.corda.core.contracts.CommandData;
+import net.corda.core.contracts.CommandWithParties;
+import net.corda.core.contracts.Contract;
 import net.corda.core.transactions.LedgerTransaction;
 
 import java.security.PublicKey;
