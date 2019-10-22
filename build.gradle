@@ -57,7 +57,7 @@ sourceSets {
     }
     test{
         java {
-            srcDir 'src/main/test'
+            srcDir 'src/test/java'
             java.outputDir = file('bin/test')
         }
     }
