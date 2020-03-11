@@ -1,9 +1,17 @@
 buildscript {
-    ext.corda_release_group = 'net.corda'
-    ext.corda_release_version = '4.0'
-    ext.corda_gradle_plugins_version = '4.0.42'
-    ext.junit_version = '4.12'
-    ext.quasar_version = '0.7.10'
+    ext {
+        corda_release_group = 'net.corda'
+        corda_core_release_group = 'net.corda'
+        corda_release_version = '4.3'
+        corda_core_release_version = '4.3'
+        corda_gradle_plugins_version = '5.0.4'
+        kotlin_version = '1.2.71'
+        junit_version = '4.12'
+        quasar_version = '0.7.10'
+        log4j_version = '2.11.2'
+        slf4j_version = '1.7.25'
+        corda_platform_version = '5'
+    }
 
     repositories {
         mavenCentral()
@@ -64,8 +72,8 @@ sourceSets {
 }
 
 cordapp {
-    targetPlatformVersion 4
-    minimumPlatformVersion 4
+    targetPlatformVersion 5
+    minimumPlatformVersion 5
     contract {
         name "Bootcamp Contracts"
         vendor "R3"
@@ -80,7 +88,14 @@ cordapp {
     }
 }
 
+
+
+
 task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
+    //Java version check
+    if(JavaVersion.current() != JavaVersion.VERSION_1_8){
+        throw new GradleException("This build must be run with java 8")
+    }
     nodeDefaults {
         projectCordapp { deploy = true }
     }
