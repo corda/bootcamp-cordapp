@@ -99,7 +99,7 @@ cordapp {
 
 task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
     //Java version check
-    if(JavaVersion.current() != JavaVersion.VERSION_1_8){
+    if (JavaVersion.current() != JavaVersion.VERSION_1_8){
         throw new GradleException("This build must be run with java 8")
     }
     nodeDefaults {
