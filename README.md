@@ -159,11 +159,18 @@ Once you've finished the CorDapp's code, run it with the following steps:
     * macOS:     `build/nodes/runnodes`
 
 * Open the nodes are started, go to the terminal of Party A (not the notary!)
-  and run the following command to issue 99 tokens to Party B:
+  and run the following command to create an account named PeterLi and share with Party B:
+```
+flow start CreateAndShareAccountFlow accountName: PeterLi, partyToShareAccountInfoToList: PartyB
 
-    `flow start TokenIssueFlow owner: PartyB, amount: 99`
+```
+* Go to terminal of Party B and run the following command to create an account named SnehaD and share with PartyA:
 
-* You can now see the tokens in the vaults of Party A and Party B (but not 
-  Party C!) by running the following command in their respective terminals:
+```
+flow start CreateAndShareAccountFlow accountName: SnehaD, partyToShareAccountInfoToList: PartyA
+```
 
-    `run vaultQuery contractStateType: bootcamp.TokenState`
+* Now let's go back to terminal of PartyA and issue an token (with PeterLi as the issuer and SnehaD as the owner):
+```
+flow start TokenIssuanceFlow issuer: PeterLi, owner: SnehaD, amount: 100
+```
