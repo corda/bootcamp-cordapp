@@ -162,7 +162,6 @@ Once you've finished the CorDapp's code, run it with the following steps:
   and run the following command to create an account named PeterLi and share with Party B:
 ```
 flow start CreateAndShareAccountFlow accountName: PeterLi, partyToShareAccountInfoToList: PartyB
-
 ```
 * Go to terminal of Party B and run the following command to create an account named SnehaD and share with PartyA:
 
