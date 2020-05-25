@@ -2,13 +2,11 @@
   <img src="https://www.corda.net/wp-content/uploads/2016/11/fg005_corda_b.png" alt="Corda" width="500">
 </p>
 
-# Bootcamp CorDapp
+# Bootcamp Accounts CorDapp
 
 This project is the template we will use as a basis for developing a complete CorDapp 
-during today's bootcamp. Our CorDapp will allow the issuance of tokens onto the ledger.
+during today's bootcamp. Our CorDapp will allow the issuance of tokens to accounts onto the ledger.
 
-We'll develop the CorDapp using a test-driven approach. At each stage, you'll know your 
-CorDapp is working once it passes both sets of tests defined in `src/test/java/bootcamp`.
 
 ## Set up
 
@@ -16,7 +14,7 @@ CorDapp is working once it passes both sets of tests defined in `src/test/java/b
 2. Download and install IntelliJ Community Edition (supported versions 2017.x and 2018.x)
 3. Download the bootcamp-cordapp repository:
 
-       git clone https://github.com/corda/bootcamp-cordapp
+       git clone https://github.com/corda/bootcamp-cordapp/tree/bootcamp-accounts
        
 4. Open IntelliJ. From the splash screen, click `Import Project`, select the `bootcamp—
 cordapp` folder and click `Open`
@@ -28,24 +26,6 @@ cordapp` folder and click `Open`
 7. Open the `Project` view by clicking `View > Tool Windows > Project`
 8. Run the test in `src/test/java/java_bootcamp/ProjectImportedOKTest.java`. It should pass!
 
-## Links to useful resources
-
-This project contains example state, contract and flow implementations:
-
-* `src/main/java/java_examples/ArtState`
-* `src/main/java/java_examples/ArtContract`
-* `src/main/java/java_examples/ArtTransferFlowInitiator`
-* `src/main/java/java_examples/ArtTransferFlowResponder`
-
-There are also several web resources that you will likely find useful for this
-bootcamp:
-
-* Key Concepts docs (`docs.corda.net/key-concepts.html`)
-* API docs (`docs.corda.net/api-index.html`)
-* Cheat sheet (`docs.corda.net/cheat-sheet.html`)
-* Sample CorDapps (`www.corda.net/samples`)
-* Stack Overflow (`www.stackoverflow.com/questions/tagged/corda`)
-
 ## What we'll be building
 
 Our CorDapp will have three parts:
@@ -53,7 +33,9 @@ Our CorDapp will have three parts:
 ### The TokenState
 
 States define shared facts on the ledger. Our state, TokenState, will define a
-token. It will have the following structure:
+token. In this CorDapp, issuer and owner will be accounts. They will be represented
+by AnonymousParty class instead of Party class.
+It will have the following structure:
 
     -------------------
     |                 |
@@ -97,12 +79,39 @@ involving TokenStates:
 * The output state is a TokenState
 * The output state has a positive amount
 * The command is an Issue command
-* The command lists the TokenState's issuer as a required signer
+* The command lists the TokenState's issuer account and owner account as a required signer
 
 ### The TokenIssueFlow
 
-Flows automate the process of updating the ledger. Our flow, TokenIssueFlow, will
-automate the following steps:
+Flows automate the process of updating the ledger. 
+We will see how PartyA (issuer) will issue a token to PartyB (owner).
+
+####Step 1 : Create and Share Account
+
+To issue tokens, we will create two accounts issuerAccount on PartyA node, and ownerAccount on PartyB node.
+issuerAccount will issue a token to ownerAccount.
+The very first thing is to create these accounts on respective nodes and share account info wih the 
+counterparties. This is achieved by running below flows. 
+
+Run below flow on PartyA's node.
+This will create an issuerAccount on PartyA's node and share it with PartyB
+
+    start CreateAndShareAccountFlow  accountName : issuerAccount , partyToShareAccountInfoToList : PartyB
+
+Run below flow on PartyB's node.    
+This will create an ownerAccount on PartyB's node and share it with PartyA
+
+    start CreateAndShareAccountFlow  accountName : ownerAccount , partyToShareAccountInfoToList : PartyA
+
+
+####Step 2 : Issue Token to Accounts
+
+Run the below flow on PartyA's node.
+Run the below flow to issue token from issuerAccount on PartyA's node to ownerAccount on PartyB's node.
+
+    start TokenIssuanceFlow issuer : issuerAccount, owner : ownerAccount , amount : 10
+
+Our flow, TokenIssueFlow, will automate the following steps:
 
             Issuer                  Owner                  Notary
               |                       |                       |
@@ -159,17 +168,11 @@ Once you've finished the CorDapp's code, run it with the following steps:
     * macOS:     `build/nodes/runnodes`
 
 * Open the nodes are started, go to the terminal of Party A (not the notary!)
-  and run the following command to create an account named PeterLi and share with Party B:
-```
-flow start CreateAndShareAccountFlow accountName: PeterLi, partyToShareAccountInfoToList: PartyB
-```
-* Go to terminal of Party B and run the following command to create an account named SnehaD and share with PartyA:
+  and run the following command to issue 99 tokens to Party B:
 
-```
-flow start CreateAndShareAccountFlow accountName: SnehaD, partyToShareAccountInfoToList: PartyA
-```
+    `flow start TokenIssueFlow owner: PartyB, amount: 99`
 
-* Now let's go back to terminal of PartyA and issue an token (with PeterLi as the issuer and SnehaD as the owner):
-```
-flow start TokenIssuanceFlow issuer: PeterLi, owner: SnehaD, amount: 100
-```
+* You can now see the tokens in the vaults of Party A and Party B (but not 
+  Party C!) by running the following command in their respective terminals:
+
+    `run vaultQuery contractStateType: bootcamp.TokenState`

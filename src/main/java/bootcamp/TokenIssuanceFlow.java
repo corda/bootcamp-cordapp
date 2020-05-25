@@ -1,19 +1,26 @@
 package bootcamp;
 
 import co.paralleluniverse.fibers.Suspendable;
+import com.google.common.collect.ImmutableList;
 import com.r3.corda.lib.accounts.contracts.states.AccountInfo;
 import com.r3.corda.lib.accounts.workflows.UtilitiesKt;
 import com.r3.corda.lib.accounts.workflows.flows.RequestKeyForAccount;
-import net.corda.core.crypto.TransactionSignature;
+import com.r3.corda.lib.accounts.workflows.flows.ShareStateAndSyncAccounts;
+import com.r3.corda.lib.ci.workflows.SyncKeyMappingFlow;
+import com.r3.corda.lib.ci.workflows.SyncKeyMappingFlowHandler;
+import net.corda.core.contracts.StateAndRef;
 import net.corda.core.flows.*;
 import net.corda.core.identity.AnonymousParty;
 import net.corda.core.identity.Party;
+import net.corda.core.node.services.vault.QueryCriteria;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 import org.jetbrains.annotations.NotNull;
-import java.security.PublicKey;
+
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 @InitiatingFlow
 @StartableByRPC
@@ -37,46 +44,46 @@ public class TokenIssuanceFlow extends FlowLogic<String> {
         AccountInfo issuerAccountInfo = UtilitiesKt.getAccountService(this).accountInfo(issuer).get(0).getState().getData();
         AccountInfo ownerAccountInfo = UtilitiesKt.getAccountService(this).accountInfo(owner).get(0).getState().getData();
 
-        //Always generate a set of new keys for new transaction
-        PublicKey issuerkey = subFlow(new NewKeyForAccount(issuerAccountInfo.getIdentifier().getId())).getOwningKey();//self node
+        AnonymousParty issuerAccount = subFlow(new RequestKeyForAccount(issuerAccountInfo));
         AnonymousParty ownerAccount = subFlow(new RequestKeyForAccount(ownerAccountInfo));
 
         //grab the notary for transaction building
         Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
 
-        //create the output state
-        TokenState tokenState = new TokenState(new AnonymousParty(issuerkey), ownerAccount , amount);
-
         //create a transactionBuilder
-        TransactionBuilder transactionBuilder = new TransactionBuilder(notary)
-                .addOutputState(tokenState)
-                .addCommand(new TokenContract.Commands.Issue(), Arrays.asList(issuerkey,ownerAccount.getOwningKey()));
+        TransactionBuilder transactionBuilder = new TransactionBuilder(notary);
+        TokenState tokenState = new TokenState(issuerAccount, ownerAccount , amount);
 
+        transactionBuilder.addOutputState(tokenState);
+        transactionBuilder.addCommand(new TokenContract.Commands.Issue() ,
+                ImmutableList.of(issuerAccount.getOwningKey(), ownerAccount.getOwningKey()));
 
-        //sign the transaction with the signers we got by calling filterMyKeys
-        SignedTransaction selfSignedTransaction = getServiceHub().signInitialTransaction(transactionBuilder,
-                Arrays.asList(getOurIdentity().getOwningKey(),issuerkey));
+        //sign the transaction with the issuer account hosted on the Initiating node
+        SignedTransaction selfSignedTransaction = getServiceHub().signInitialTransaction(transactionBuilder, issuerAccount.getOwningKey());
 
-        //Collect sigs
-        FlowSession sessionForAccountToSendTo = initiateFlow(ownerAccountInfo.getHost());
-        List<TransactionSignature> accountToMoveToSignature = (List<TransactionSignature>) subFlow(
-                new CollectSignatureFlow(selfSignedTransaction, sessionForAccountToSendTo,ownerAccount.getOwningKey()));
-        SignedTransaction fullySignedTx = selfSignedTransaction.withAdditionalSignatures(accountToMoveToSignature);
+        FlowSession ownerSession = initiateFlow(ownerAccountInfo.getHost());
+
+        //call CollectSignaturesFlow to get the signature from the owner by specifying with issuer key telling CollectSignaturesFlow that issuer has already signed the transaction
+        final SignedTransaction fullySignedTx = subFlow(new CollectSignaturesFlow(selfSignedTransaction, Arrays.asList(ownerSession), Collections.singleton(issuerAccount.getOwningKey())));
 
         //call FinalityFlow for finality
-        SignedTransaction stx = subFlow(new FinalityFlow(fullySignedTx, Arrays.asList(sessionForAccountToSendTo)));
+        SignedTransaction stx = subFlow(new FinalityFlow(fullySignedTx, Arrays.asList(ownerSession)));
+
         return "One Token State issued to "+owner+ " from " + issuer+ " with amount: "+amount +"\ntxId: "+ stx.getId() ;
     }
 }
 
+/**
+ * This is the responder flow which will get called for the owner to sign the transaction and also to receive the fully signed validated transaction to save in the node's vault and map the token state to
+ * owner account
+ */
 @InitiatedBy(TokenIssuanceFlow.class)
 class TokenIssuanceFlowResponder extends FlowLogic<Void> {
-    //private variable
-    private FlowSession counterpartySession;
 
-    //Constructor
-    public TokenIssuanceFlowResponder(FlowSession counterpartySession) {
-        this.counterpartySession = counterpartySession;
+    private final FlowSession otherSide;
+
+    public TokenIssuanceFlowResponder(FlowSession otherSide) {
+        this.otherSide = otherSide;
     }
 
     @Override
@@ -85,10 +92,11 @@ class TokenIssuanceFlowResponder extends FlowLogic<Void> {
         subFlow(new SignTransactionFlow(counterpartySession) {
             @Override
             protected void checkTransaction(@NotNull SignedTransaction stx) throws FlowException {
-                // Custom Logic to validate transaction.
+                // Owner can add Custom Logic to validate transaction.
             }
         });
-        subFlow(new ReceiveFinalityFlow(counterpartySession));
+        subFlow(new ReceiveFinalityFlow(otherSide));
+
         return null;
     }
 }
