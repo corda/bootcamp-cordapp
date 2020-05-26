@@ -84,32 +84,7 @@ involving TokenStates:
 ### The TokenIssueFlow
 
 Flows automate the process of updating the ledger. 
-We will see how PartyA (issuer) will issue a token to PartyB (owner).
-
-####Step 1 : Create and Share Account
-
-To issue tokens, we will create two accounts issuerAccount on PartyA node, and ownerAccount on PartyB node.
-issuerAccount will issue a token to ownerAccount.
-The very first thing is to create these accounts on respective nodes and share account info wih the 
-counterparties. This is achieved by running below flows. 
-
-Run below flow on PartyA's node.
-This will create an issuerAccount on PartyA's node and share it with PartyB
-
-    start CreateAndShareAccountFlow  accountName : issuerAccount , partyToShareAccountInfoToList : PartyB
-
-Run below flow on PartyB's node.    
-This will create an ownerAccount on PartyB's node and share it with PartyA
-
-    start CreateAndShareAccountFlow  accountName : ownerAccount , partyToShareAccountInfoToList : PartyA
-
-
-####Step 2 : Issue Token to Accounts
-
-Run the below flow on PartyA's node.
-Run the below flow to issue token from issuerAccount on PartyA's node to ownerAccount on PartyB's node.
-
-    start TokenIssuanceFlow issuer : issuerAccount, owner : ownerAccount , amount : 10
+We will see how PartyA's issuer will issue a token to PartyB's owner.
 
 Our flow, TokenIssueFlow, will automate the following steps:
 
@@ -167,12 +142,27 @@ Once you've finished the CorDapp's code, run it with the following steps:
     * Windows:   `build\nodes\runnodes.bat`
     * macOS:     `build/nodes/runnodes`
 
-* Open the nodes are started, go to the terminal of Party A (not the notary!)
-  and run the following command to issue 99 tokens to Party B:
+#### Step 1 : Create and Share Account
 
-    `flow start TokenIssueFlow owner: PartyB, amount: 99`
+To issue tokens, we will create two accounts issuerAccount on PartyA node, and ownerAccount on PartyB node.
+issuerAccount will issue a token to ownerAccount.
+The very first thing is to create these accounts on respective nodes and share account info wih the 
+counterparties. This is achieved by running below flows. 
 
-* You can now see the tokens in the vaults of Party A and Party B (but not 
-  Party C!) by running the following command in their respective terminals:
+Run below flow on PartyA's node.
+This will create an issuerAccount on PartyA's node and share it with PartyB
 
-    `run vaultQuery contractStateType: bootcamp.TokenState`
+    start CreateAndShareAccountFlow  accountName : issuerAccount , partyToShareAccountInfoToList : PartyB
+
+Run below flow on PartyB's node.    
+This will create an ownerAccount on PartyB's node and share it with PartyA
+
+    start CreateAndShareAccountFlow  accountName : ownerAccount , partyToShareAccountInfoToList : PartyA
+
+
+#### Step 2 : Issue Token to Accounts
+
+Run the below flow on PartyA's node.
+Run the below flow to issue token from issuerAccount on PartyA's node to ownerAccount on PartyB's node.
+
+    start TokenIssuanceFlow issuer : issuerAccount, owner : ownerAccount , amount : 10
