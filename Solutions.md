@@ -1,5 +1,6 @@
 # TokenState
 
+```java
     package bootcamp;
     
     import net.corda.core.contracts.BelongsToContract;
@@ -49,8 +50,12 @@
         }
     }
 
+```
+
+
 # TokenContract
 
+```java
     package bootcamp;
     
     import net.corda.core.contracts.CommandData;
@@ -96,9 +101,12 @@
             }
         }
     }
+```
+
 
 # TokenIssueFlowInitiator
 
+```java
     package bootcamp;
     
     import co.paralleluniverse.fibers.Suspendable;
@@ -157,3 +165,4 @@
             return subFlow(new FinalityFlow(fullySignedTransaction, singletonList(session)));
         }
     }
+```
