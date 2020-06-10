@@ -166,3 +166,17 @@
         }
     }
 ```
+
+
+# Running our Nodes 
+
+```sh
+./gradlew deploynodes
+
+#(OPTIONAL)
+killall -9 java
+
+./build/nodes/runnodes
+flow start bootcamp.TokenIssueFlowInitiator owner: PartyB, amount: 50
+```
+
