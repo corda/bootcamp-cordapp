@@ -1,6 +1,7 @@
 package bootcamp;
 
 import net.corda.core.contracts.CommandData;
+import net.corda.core.transactions.LedgerTransaction;
 import static net.corda.core.contracts.ContractsDSL.requireSingleCommand;    
 import static net.corda.core.contracts.ContractsDSL.requireThat;
 
