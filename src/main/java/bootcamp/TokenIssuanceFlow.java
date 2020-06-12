@@ -40,6 +40,9 @@ public class TokenIssuanceFlow extends FlowLogic<String> {
         AnonymousParty issuerAccount = subFlow(new RequestKeyForAccount(issuerAccountInfo));
         AnonymousParty ownerAccount = subFlow(new RequestKeyForAccount(ownerAccountInfo));
 
+        FlowSession ownerSession = initiateFlow(ownerAccountInfo.getHost());
+
+        //subFlow(new SyncKeyMappingFlow(ownerSession, Arrays.asList(issuerAccount)));
         //grab the notary for transaction building
         Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
 
@@ -51,10 +54,11 @@ public class TokenIssuanceFlow extends FlowLogic<String> {
         transactionBuilder.addCommand(new TokenContract.Commands.Issue() ,
                 ImmutableList.of(issuerAccount.getOwningKey(), ownerAccount.getOwningKey()));
 
+        transactionBuilder.verify(getServiceHub());
+
         //sign the transaction with the issuer account hosted on the Initiating node
         SignedTransaction selfSignedTransaction = getServiceHub().signInitialTransaction(transactionBuilder, issuerAccount.getOwningKey());
 
-        FlowSession ownerSession = initiateFlow(ownerAccountInfo.getHost());
 
         //call CollectSignaturesFlow to get the signature from the owner by specifying with issuer key telling CollectSignaturesFlow that issuer has already signed the transaction
         final SignedTransaction fullySignedTx = subFlow(new CollectSignaturesFlow(selfSignedTransaction, Arrays.asList(ownerSession), Collections.singleton(issuerAccount.getOwningKey())));
@@ -82,6 +86,9 @@ class TokenIssuanceFlowResponder extends FlowLogic<Void> {
     @Override
     @Suspendable
     public Void call() throws FlowException {
+
+        //subFlow(new SyncKeyMappingFlowHandler(otherSide));
+
         subFlow(new SignTransactionFlow(otherSide) {
             @Override
             protected void checkTransaction(@NotNull SignedTransaction stx) throws FlowException {
