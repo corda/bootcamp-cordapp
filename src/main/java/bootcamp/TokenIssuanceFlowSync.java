@@ -55,16 +55,22 @@ public class TokenIssuanceFlowSync extends FlowLogic<String> {
 
         //create a transactionBuilder
         TransactionBuilder transactionBuilder = new TransactionBuilder(notary);
-        TokenState tokenState = new TokenState(issuerAccount, ownerAccount , amount);
 
-        transactionBuilder.addOutputState(tokenState);
-        transactionBuilder.addCommand(new TokenContract.Commands.Issue() ,
-                ImmutableList.of(issuerAccount.getOwningKey(), ownerAccount.getOwningKey()));
+        OwnableTokenState tokenState = new OwnableTokenState(issuerAccount, ownerAccount , amount);
+        NormalState normalState = new NormalState(issuerAccount,ownerAccount,amount);
+
+        transactionBuilder
+                .addOutputState(tokenState)
+                .addOutputState(normalState);
+        transactionBuilder
+                .addCommand(new TokenContract.Commands.Issue() , ImmutableList.of(issuerAccount.getOwningKey(), ownerAccount.getOwningKey()))
+                .addCommand(new NormalContract.Commands.TransferAsset(),ImmutableList.of(issuerAccount.getOwningKey(), ownerAccount.getOwningKey()));
 
         transactionBuilder.verify(getServiceHub());
 
         //sign the transaction with the issuer account hosted on the Initiating node
         SignedTransaction selfSignedTransaction = getServiceHub().signInitialTransaction(transactionBuilder, issuerAccount.getOwningKey());
+
 
         //call CollectSignaturesFlow to get the signature from the owner by specifying with issuer key telling CollectSignaturesFlow that issuer has already signed the transaction
         final SignedTransaction fullySignedTx = subFlow(new CollectSignaturesFlow(selfSignedTransaction, Arrays.asList(ownerSession), Collections.singleton(issuerAccount.getOwningKey())));
@@ -74,9 +80,7 @@ public class TokenIssuanceFlowSync extends FlowLogic<String> {
 
         UUID id = issuerAccountInfo.getIdentifier().getId();
         QueryCriteria.VaultQueryCriteria criteria = new QueryCriteria.VaultQueryCriteria().withExternalIds(Arrays.asList(id));
-
-        List<StateAndRef<TokenState>> tokenList = getServiceHub().getVaultService().queryBy(TokenState.class,criteria).getStates();
-
+        List<StateAndRef<NormalState>> tokenList = getServiceHub().getVaultService().queryBy(NormalState.class,criteria).getStates();
         subFlow(new ShareStateAndSyncAccounts(tokenList.get(0), ownerAccountInfo.getHost()));
 
         return "One Token State issued to "+owner+ " from " + issuer+ " with amount: "+amount +"\ntxId: "+ stx.getId() ;

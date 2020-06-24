@@ -26,15 +26,17 @@ public class QuerybyAccount extends FlowLogic<String> {
     @Suspendable
     public String call() throws FlowException {
         AccountInfo myAccount = UtilitiesKt.getAccountService(this).accountInfo(whoAmI).get(0).getState().getData();
+
         UUID id = myAccount.getIdentifier().getId();
+
         QueryCriteria.VaultQueryCriteria criteria = new QueryCriteria.VaultQueryCriteria().withExternalIds(Arrays.asList(id));
 
-        List<StateAndRef<TokenState>> tokenList = getServiceHub().getVaultService().queryBy(TokenState.class,criteria).getStates();
+        List<StateAndRef<OwnableTokenState>> tokenList = getServiceHub().getVaultService().queryBy(OwnableTokenState.class,criteria).getStates();
 
         String output = "";
 
         if(tokenList.size() > 0 ) {
-            TokenState tokenState = tokenList.get(0).getState().getData();
+            OwnableTokenState tokenState = tokenList.get(0).getState().getData();
             if(tokenState != null) {
 
                 Party issuerParty = getServiceHub().getIdentityService().wellKnownPartyFromAnonymous(tokenState.getIssuer());

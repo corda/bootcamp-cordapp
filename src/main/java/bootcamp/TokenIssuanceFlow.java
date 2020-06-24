@@ -5,15 +5,20 @@ import com.google.common.collect.ImmutableList;
 import com.r3.corda.lib.accounts.contracts.states.AccountInfo;
 import com.r3.corda.lib.accounts.workflows.UtilitiesKt;
 import com.r3.corda.lib.accounts.workflows.flows.RequestKeyForAccount;
+import com.r3.corda.lib.accounts.workflows.flows.ShareStateAndSyncAccounts;
+import net.corda.core.contracts.StateAndRef;
 import net.corda.core.flows.*;
 import net.corda.core.identity.AnonymousParty;
 import net.corda.core.identity.Party;
+import net.corda.core.node.services.vault.QueryCriteria;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 @InitiatingFlow
 @StartableByRPC
@@ -47,11 +52,16 @@ public class TokenIssuanceFlow extends FlowLogic<String> {
 
         //create a transactionBuilder
         TransactionBuilder transactionBuilder = new TransactionBuilder(notary);
-        TokenState tokenState = new TokenState(issuerAccount, ownerAccount , amount);
 
-        transactionBuilder.addOutputState(tokenState);
-        transactionBuilder.addCommand(new TokenContract.Commands.Issue() ,
-                ImmutableList.of(issuerAccount.getOwningKey(), ownerAccount.getOwningKey()));
+        OwnableTokenState tokenState = new OwnableTokenState(issuerAccount, ownerAccount , amount);
+        NormalState normalState = new NormalState(issuerAccount,ownerAccount,amount);
+
+        transactionBuilder
+                .addOutputState(normalState)
+                .addOutputState(tokenState);
+        transactionBuilder
+                .addCommand(new TokenContract.Commands.Issue() , ImmutableList.of(issuerAccount.getOwningKey(), ownerAccount.getOwningKey()))
+                .addCommand(new NormalContract.Commands.TransferAsset(),ImmutableList.of(issuerAccount.getOwningKey(), ownerAccount.getOwningKey()));
 
         transactionBuilder.verify(getServiceHub());
 
@@ -65,6 +75,11 @@ public class TokenIssuanceFlow extends FlowLogic<String> {
         //call FinalityFlow for finality
         SignedTransaction stx = subFlow(new FinalityFlow(fullySignedTx, Arrays.asList(ownerSession)));
 
+//        UUID id = issuerAccountInfo.getIdentifier().getId();
+//        QueryCriteria.VaultQueryCriteria criteria = new QueryCriteria.VaultQueryCriteria().withExternalIds(Arrays.asList(id));
+//        List<StateAndRef<NormalState>> tokenList = getServiceHub().getVaultService().queryBy(NormalState.class,criteria).getStates();
+//        subFlow(new ShareStateAndSyncAccounts(tokenList.get(0), ownerAccountInfo.getHost()));
+//
         return "One Token State issued to "+owner+ " from " + issuer+ " with amount: "+amount +"\ntxId: "+ stx.getId() ;
     }
 }
