@@ -22,19 +22,19 @@ import java.util.List;
 
 @InitiatingFlow
 @StartableByRPC
-public class TokenIssuanceFlow extends FlowLogic<String> {
+public class TokenIssuanceFlowWithSync extends FlowLogic<String> {
 
     private String issuerAccount;
     private String ownerAccount;
     private int amount;
 
-    public TokenIssuanceFlow(String issuerAccount, String ownerAccount, int amount) {
+    public TokenIssuanceFlowWithSync(String issuerAccount, String ownerAccount, int amount) {
         this.issuerAccount = issuerAccount;
         this.ownerAccount = ownerAccount;
         this.amount = amount;
     }
 
-    public TokenIssuanceFlow(String ownerAccount, int amount) {
+    public TokenIssuanceFlowWithSync(String ownerAccount, int amount) {
         this.ownerAccount = ownerAccount;
         this.amount = amount;
     }
@@ -85,6 +85,11 @@ public class TokenIssuanceFlow extends FlowLogic<String> {
         //call FinalityFlow for finality
         if(!accountService.accountInfo(ownerAccount).get(0).getState().getData().getHost().equals(getOurIdentity())) {
             stx = subFlow(new FinalityFlow(fullySignedTx, Arrays.asList(ownerSession)));
+            try {
+                accountService.shareStateAndSyncAccounts(stx.toLedgerTransaction(getServiceHub()).outRef(0) ,ownerSession.getCounterparty());
+            } catch (SignatureException e) {
+                e.printStackTrace();
+            }
         }
         else{
             stx = subFlow(new FinalityFlow(fullySignedTx, Collections.emptyList()));
@@ -95,17 +100,16 @@ public class TokenIssuanceFlow extends FlowLogic<String> {
 }
 
 
-
 /**
  * This is the responder flow which will get called for the owner to sign the transaction and also to receive the fully signed validated transaction to save in the node's vault and map the token state to
  * owner account
  */
-@InitiatedBy(TokenIssuanceFlow.class)
-class TokenIssuanceFlowResponder extends FlowLogic<Void> {
+@InitiatedBy(TokenIssuanceFlowWithSync.class)
+class TokenIssuanceFlowSyncResponder extends FlowLogic<Void> {
 
     private final FlowSession otherSide;
 
-    public TokenIssuanceFlowResponder(FlowSession otherSide) {
+    public TokenIssuanceFlowSyncResponder(FlowSession otherSide) {
         this.otherSide = otherSide;
     }
 

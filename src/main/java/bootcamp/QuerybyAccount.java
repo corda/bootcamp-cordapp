@@ -3,66 +3,59 @@ package bootcamp;
 import co.paralleluniverse.fibers.Suspendable;
 import com.r3.corda.lib.accounts.contracts.states.AccountInfo;
 import com.r3.corda.lib.accounts.workflows.UtilitiesKt;
+import net.corda.core.contracts.ContractState;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.flows.FlowException;
 import net.corda.core.flows.FlowLogic;
 import net.corda.core.flows.StartableByRPC;
 import net.corda.core.identity.Party;
+import net.corda.core.node.services.Vault;
 import net.corda.core.node.services.vault.QueryCriteria;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @StartableByRPC
-public class QuerybyAccount extends FlowLogic<String> {
+public class QuerybyAccount extends FlowLogic<List<TokenStateModel>> {
 
-    private final String whoAmI;
-    public QuerybyAccount(String whoAmI) {
-        this.whoAmI = whoAmI;
+    private final String name;
+    public QuerybyAccount(String name) {
+        this.name = name;
     }
 
     @Override
     @Suspendable
-    public String call() throws FlowException {
-        AccountInfo myAccount = UtilitiesKt.getAccountService(this).accountInfo(whoAmI).get(0).getState().getData();
+    public List<TokenStateModel> call() throws FlowException {
+        AccountInfo myAccount = UtilitiesKt.getAccountService(this).accountInfo(name).get(0).getState().getData();
         UUID id = myAccount.getIdentifier().getId();
         QueryCriteria.VaultQueryCriteria criteria = new QueryCriteria.VaultQueryCriteria().withExternalIds(Arrays.asList(id));
 
-        List<StateAndRef<TokenState>> tokenList = getServiceHub().getVaultService().queryBy(TokenState.class,criteria).getStates();
+        List<StateAndRef<TokenState>> tokenStateAndRefs =  getServiceHub().getVaultService().queryBy(TokenState.class,criteria).getStates();
 
-        String output = "";
-
-        if(tokenList.size() > 0 ) {
-            TokenState tokenState = tokenList.get(0).getState().getData();
-            if(tokenState != null) {
-
-                Party issuerParty = getServiceHub().getIdentityService().wellKnownPartyFromAnonymous(tokenState.getIssuer());
-                Party ownerParty = getServiceHub().getIdentityService().wellKnownPartyFromAnonymous(tokenState.getOwner());
-
-                if(issuerParty == null) {
-                    output = "Issuer Key to account mapping is not available with this node. Please use SyncKeyMApping or ShareStateWithAccounts flows to sync the mappings";
-                    output = output+ " Amount is : " + tokenState.getAmount()
-                            + " Owner is : " + UtilitiesKt.getAccountService(this).accountInfo(tokenState.getOwner().getOwningKey()).getState().getData().getName();
-
-
-                } else if(ownerParty == null) {
-                    output = "Owner Key to account mapping is not available with this node. Please use SyncKeyMApping or ShareStateWithAccounts flows to sync the mappings";
-                    output = output+ " Amount is : " + tokenState.getAmount()
-                            + " Issuer is : " + UtilitiesKt.getAccountService(this).accountInfo(tokenState.getIssuer().getOwningKey()).getState().getData().getName();
-                }
-
-                if(issuerParty != null && ownerParty != null) {
-                    output = output+ " \nAmount is : " + tokenState.getAmount()
-                            + " Issuer is : " + UtilitiesKt.getAccountService(this).accountInfo(tokenState.getIssuer().getOwningKey()).getState().getData().getName()
-                            + " Owner is : " + UtilitiesKt.getAccountService(this).accountInfo(tokenState.getOwner().getOwningKey()).getState().getData().getName();
-                }
-            }
-
-        } else {
-            output = "No TokenState mapped to this account on this node. So either this account is not a participant or account to key mapping is not known to this node.Please use SyncKeyMApping or ShareStateWithAccounts flows to sync the mappings";
-
+        if(tokenStateAndRefs.size() == 0){
+            return Collections.emptyList();
         }
-        return output;
+        return tokenStateAndRefs.stream().map(tokenStateAndRef -> {
+            TokenState state = tokenStateAndRef.getState().getData();
+            String issuer;
+            if(state.getIssuer() instanceof Party)
+                issuer = state.getIssuer().toString();
+            else
+                if(UtilitiesKt.getAccountService(this)
+                        .accountInfo(state.getIssuer().getOwningKey()) == null ){
+                    issuer = state.getIssuer().toString();
+                }
+                else{
+                    issuer = UtilitiesKt.getAccountService(this)
+                            .accountInfo(state.getIssuer().getOwningKey()).getState().getData().getName();
+                }
+
+            String owner = UtilitiesKt.getAccountService(this)
+                    .accountInfo(state.getOwner().getOwningKey()).getState().getData().getName();
+            return new TokenStateModel(issuer, owner, state.getAmount());
+        }).collect(Collectors.toList());
     }
 }

@@ -14,21 +14,21 @@ import java.util.List;
 @BelongsToContract(TokenContract.class)
 public class TokenState implements ContractState{
 
-    private final AnonymousParty issuer;
+    private final AbstractParty issuer;
     private final AnonymousParty owner;
     private final int amount;
 
-    public TokenState(AnonymousParty issuer, AnonymousParty owner, int amount) {
+    public TokenState(AbstractParty issuer, AnonymousParty owner, int amount) {
         this.issuer = issuer;
         this.owner = owner;
         this.amount = amount;
     }
 
-    public AnonymousParty getIssuer() {
+    public AbstractParty getIssuer() {
         return issuer;
     }
 
-    public AnonymousParty getOwner() {
+    public AbstractParty getOwner() {
         return owner;
     }
 
@@ -40,5 +40,15 @@ public class TokenState implements ContractState{
     @Override
     public List<AbstractParty> getParticipants() {
         return ImmutableList.of(issuer,owner);
+    }
+
+    @Override
+    public String toString() {
+        return "\n" +
+                "TokenState{" + "\n" +
+                "issuer=" + issuer + "\n" +
+                ", owner=" + owner + "\n" +
+                ", amount=" + amount + "\n" +
+                "}";
     }
 }
