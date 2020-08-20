@@ -5,3 +5,5 @@ lib/dependencies/
 .DS_Store
 out
 bootcamp-cordapp.iml
+bin/
+logs/
