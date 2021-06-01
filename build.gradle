@@ -16,14 +16,16 @@ buildscript {
         corda_platform_version = constants.getProperty("platformVersion").toInteger()
     }
 
+    apply from: "${rootProject.projectDir}/repositories.gradle"
+    apply plugin: 'java'
+
     repositories {
         mavenLocal()
         mavenCentral()
         jcenter()
         maven { url 'https://jitpack.io' }
-        maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
+        maven { url 'https://software.r3.com/artifactory/corda-releases' }
         maven { url 'https://repo.gradle.org/gradle/libs-releases' }
-
     }
 
     dependencies {
@@ -31,16 +33,6 @@ buildscript {
         classpath "net.corda.plugins:cordformation:$corda_gradle_plugins_version"
         classpath "net.corda.plugins:quasar-utils:$corda_gradle_plugins_version"
     }
-}
-
-repositories {
-    mavenLocal()
-    jcenter()
-    mavenCentral()
-    maven { url 'https://jitpack.io' }
-    maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
-    maven { url 'https://repo.gradle.org/gradle/libs-releases' }
-
 }
 
 apply plugin: 'java'
@@ -104,44 +96,44 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
     if (JavaVersion.current() != JavaVersion.VERSION_1_8){
         throw new GradleException("This build must be run with java 8")
     }
+
     nodeDefaults {
         projectCordapp { deploy = true }
+        rpcUsers = [[user: "user1", password: "test", permissions: ["ALL"]]]
     }
+
     node {
         name "O=Notary,L=London,C=GB"
         notary = [validating: false]
-        p2pPort 10000
+        p2pPort 10001
         cordapps = []
         rpcSettings {
-            address("localhost:10001")
-            adminAddress("localhost:10002")
+            address("localhost:10011")
+            adminAddress("localhost:10021")
         }
     }
     node {
         name "O=PartyA,L=London,C=GB"
-        p2pPort 10003
+        p2pPort 10002
         rpcSettings {
-            address("localhost:10004")
-            adminAddress("localhost:10005")
+            address("localhost:10012")
+            adminAddress("localhost:10022")
         }
-        rpcUsers = [[user: "user1", password: "test", permissions: ["ALL"]]]
     }
     node {
         name "O=PartyB,L=New York,C=US"
-        p2pPort 10006
+        p2pPort 10003
         rpcSettings {
-            address("localhost:10007")
-            adminAddress("localhost:10008")
+            address("localhost:10013")
+            adminAddress("localhost:10023")
         }
-        rpcUsers = [[user: "user1", password: "test", permissions: ["ALL"]]]
     }
     node {
         name "O=PartyC,L=Lagos,C=NG"
-        p2pPort 10009
+        p2pPort 10004
         rpcSettings {
-            address("localhost:10010")
-            adminAddress("localhost:10011")
+            address("localhost:10014")
+            adminAddress("localhost:10024")
         }
-        rpcUsers = [[user: "user1", password: "test", permissions: ["ALL"]]]
     }
 }
