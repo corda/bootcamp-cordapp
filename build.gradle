@@ -89,6 +89,7 @@ cordapp {
         licence "A liberal, open source licence"
         versionId 1
     }
+
     workflow {
         name "Bootcamp Flows"
         vendor "R3"
@@ -98,10 +99,8 @@ cordapp {
 }
 
 
-
-
 task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
-    //Java version check
+    // Java version check
     if (JavaVersion.current() != JavaVersion.VERSION_1_8){
         throw new GradleException("This build must be run with java 8")
     }
