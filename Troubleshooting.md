@@ -54,3 +54,8 @@ Here is a list of common issues encountered during the bootcamp, and how to fix 
     Task: `:cleanTest :test`
 
     Arguments: `--tests "bootcamp.StateTests"` (or ContractTests or FlowTests)
+ * `Unable to generate CorDapp jar from local project in C:\dev\github\bootcamp-cordapp (exit=1)
+    java.lang.IllegalStateException: Unable to generate CorDapp jar from local project in C:\dev\github\bootcamp-cordapp (exit=1)`
+   * **Cause**: When running inside IntelliJ (seems like an issue with 2019.2) sometimes the call for gradlew that's coming from the MockNetwork setup process exits with an error code.
+   
+   * **Fix**: Run gradlew test from Git-Bash (MINGW)
