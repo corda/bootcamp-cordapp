@@ -1,151 +1,131 @@
 <p align="center">
-  <img src="https://www.corda.net/wp-content/uploads/2016/11/fg005_corda_b.png" alt="Corda" width="500">
+    <img src="https://www.corda.net/wp-content/uploads/2016/11/fg005_corda_b.png" alt="Corda" width="500">
 </p>
 
-# Bootcamp CorDapp [<img src="https://raw.githubusercontent.com/corda/samples-java/master/webIDE.png" height=25 />](https://ide.corda.net/?folder=/home/coder/bootcamp-cordapp)
+# Corda Token SDK
 
-This project is the template we will use as a basis for developing a complete CorDapp
-during today's bootcamp. Our CorDapp will allow the issuance of tokens onto the ledger.
+## Reminder
 
-We'll develop the CorDapp using a test-driven approach. At each stage, you'll know your
-CorDapp is working once it passes both sets of tests defined in `src/test/java/bootcamp`.
+This project is open source under an Apache 2.0 licence. That means you
+can submit PRs to fix bugs and add new features if they are not currently
+available.
 
-## Set up
+## What is the token SDK?
 
-1. Download and install a JDK 8 JVM (minimum supported version 8u131)
-2. Download and install IntelliJ Community Edition (supported versions: prior than 2021)
-3. Download the bootcamp-cordapp repository:
+The tokens SDK exists to make it easy for CorDapp developers to create
+CorDapps which use tokens. Functionality is provided to create token types,
+then issue, move and redeem tokens of a particular type.
 
-       git clone https://github.com/corda/bootcamp-cordapp
+The tokens SDK comprises three CorDapp JARs:
 
-4. Open IntelliJ load the project
+1. Contracts which contains the base types, states and contracts
+2. Workflows which contains flows for issuing, moving and redeeming tokens
+   as well as utilities for the above operations.
+3. Money which contains token type definitions for various currencies
 
-## What we'll be building
+The token SDK is intended to replace the "finance module" from the core
+Corda repository.
 
-Our CorDapp will have three parts:
+For more details behind the token SDK's design, see
+[here](design/design.md).
 
-### The TokenState
+## How to use the SDK?
 
-States define shared facts on the ledger. Our state, TokenState, will define a
-token. It will have the following structure:
+### Using the bootcamp cordapp.
 
-    -------------------
-    |                 |
-    |   TokenState    |
-    |                 |
-    |   - issuer      |
-    |   - owner       |
-    |   - amount      |
-    |                 |
-    -------------------
+By far the easiest way to get started with the tokens SDK is to use the
+`tokens-template` which is a branch on the java version of the "CorDapp
+template". You can obtain it with the following commands:
 
-### The TokenContract
+You can get started to use tokens-sdk by cloning this bootcamp-cordapp. 
 
-Contracts govern how states evolve over time. Our contract, TokenContract,
-will define how TokenStates evolve. It will only allow the following type of
-TokenState transaction:
+    git clone https://github.com/corda/bootcamp-cordapp.git
+    cd bootcamp-cordapp
+    git checkout token_bootcamp
 
-    -------------------------------------------------------------------------------------
-    |                                                                                   |
-    |    - - - - - - - - - -                                     -------------------    |
-    |                                              ▲             |                 |    |
-    |    |                 |                       | -►          |   TokenState    |    |
-    |            NO             -------------------     -►       |                 |    |
-    |    |                 |    |      Issue command       -►    |   - issuer      |    |
-    |          INPUTS           |     signed by issuer     -►    |   - owner       |    |
-    |    |                 |    -------------------     -►       |   - amount > 0  |    |
-    |                                              | -►          |                 |    |
-    |    - - - - - - - - - -                       ▼             -------------------    |
-    |                                                                                   |
-    -------------------------------------------------------------------------------------
+Once you have cloned the repository, you should open it with IntelliJ. This
+will give you an example repo with the token SDK dependencies already
+included and some example code which should illustrate you how to use token SDK.
+You can `deployNodes` to create three nodes:
 
-              No inputs             One issue command,                One output,
-                                 issuer is a required signer       amount is positive
+    ./gradlew clean deployNodes
+    ./build/nodes/runnodes
 
-To do so, TokenContract will impose the following constraints on transactions
-involving TokenStates:
+You can issue some currency tokens from `PartyA` to `PartyB` from Party A's
+shell with the following command:
 
-* The transaction has no input states
-* The transaction has one output state
-* The transaction has one command
-* The output state is a TokenState
-* The output state has a positive amount
-* The command is an Issue command
-* The command lists the TokenState's issuer as a required signer
+    start CreateAndIssueFixedToken currencyCode: GBP, amount: 100, recipient: PartyB
 
-### The TokenIssueFlow
+To check the issued Fungible tokens run the below command on PartyB's terminal
 
-Flows automate the process of updating the ledger. Our flow, TokenIssueFlow, will
-automate the following steps:
+      run vaultQuery contractStateType : com.r3.corda.lib.tokens.contracts.states.FungibleToken
 
-            Issuer                  Owner                  Notary
-              |                       |                       |
-       Chooses a notary
-              |                       |                       |
-        Starts building
-         a transaction                |                       |
-              |
-        Adds the output               |                       |
-          TokenState
-              |                       |                       |
-           Adds the
-         Issue command                |                       |
-              |
-         Verifies the                 |                       |
-          transaction
-              |                       |                       |
-          Signs the
-         transaction                  |                       |
-              |
-              |----------------------------------------------►|
-              |                       |                       |
-                                                         Notarises the
-              |                       |                   transaction
-                                                              |
-              |◀----------------------------------------------|
-              |                       |                       |
-         Records the
-         transaction                  |                       |
-              |
-              |----------------------►|                       |
-                                      |
-              |                  Records the                  |
-                                 transaction
-              |                       |                       |
-              ▼                       ▼                       ▼
+Create evolvable token type on the ledger on PartyA's terminal
 
-## Running our CorDapp
+    start CreateEvolvableToken importantInformationThatMayChange : random
 
-Normally, you'd interact with a CorDapp via a client or webserver. So we can
-focus on our CorDapp, we'll be running it via the node shell instead.
+This will create a linear state of type StateTokenType in A's vault
 
-Once you've finished the CorDapp's code, run it with the following steps:
+Get the uuid of the StateTokenType from PartyA's terminal by hitting below command.
 
-* Build a test network of nodes by opening a terminal window at the root of
-  your project and running the following command:
+    run vaultQuery contractStateType : com.bootcamp.states.StateTokenType
 
-  * Windows:   `gradlew.bat deployNodes`
-  * Linux/Mac:     `./gradlew deployNodes`
+Issue tokens off the created ExampleEvolvableTokenType from PartyA s terminal to PartyB
 
-* Start the nodes by running the following command:
+    start IssueEvolvableToken tokenId : 79332247-61d2-4d00-bb1f-d62416cf4920 , recipient : PartyB
 
-  * Windows:   `build\nodes\runnodes.bat`
-  * Linux/Mac: `./build/nodes/runnodes`
+To check the issued NFT run the below command on PartyB's terminal
 
+      run vaultQuery contractStateType : com.r3.corda.lib.tokens.contracts.states.NonFungibleToken
 
+### Adding token SDK dependencies to an existing CorDapp
 
-* Build and Start the nodes using docker:
-  * Windows:   `gradlew.bat prepareDockerNodes`
-  * Linux/Mac:     `./gradlew prepareDockerNodes`
-  * `ACCEPT_LICENSE=Y | docker-compose -f ./build/nodes/docker-compose.yml up`
+First, add a variable for the tokens SDK version you wish to use:
 
+    buildscript {
+        ext {
+            tokens_release_version = '1.2'
+            tokens_release_group = 'com.r3.corda.lib.tokens'
+        }
+    }
 
-* Open the nodes are started, go to the terminal of Party A (not the notary!)
-  and run the following command to issue 99 tokens to Party B:
+Second, you must add the tokens development artifactory repository to the
+list of repositories for your project:
 
-  `flow start TokenIssueFlowInitiator owner: PartyB, amount: 99`
+    repositories {
+        maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-lib' }
+    }
 
-* You can now see the tokens in the vaults of Party A and Party B (but not
-  Party C!) by running the following command in their respective terminals:
+Now, you can add the tokens SDK dependencies to the `dependencies` block
+in each module of your CorDapp. For contract modules add:
 
-  `run vaultQuery contractStateType: com.bootcamp.contracts.TokenState`
+    cordaCompile "$tokens_release_group:tokens-contracts:$tokens_release_version"
+
+In your workflow `build.gradle` add:
+
+    cordaCompile "$tokens_release_group:tokens-workflows:$tokens_release_version"
+
+If you want to use the `deployNodes` task, you will need to add the
+following dependencies to your root `build.gradle` file:
+
+    cordapp "$tokens_release_group:tokens-contracts:$tokens_release_version"
+    cordapp "$tokens_release_group:tokens-workflows:$tokens_release_version"
+
+These should also be added to the `deployNodes` task with the following syntax:
+
+    nodeDefaults {
+        projectCordapp {
+            deploy = false
+        }
+        cordapp("$tokens_release_group:tokens-contracts:$tokens_release_version")
+        cordapp("$tokens_release_group:tokens-workflows:$tokens_release_version")
+    }
+
+### Installing the token SDK binaries
+
+If you wish to build the token SDK from source then do the following to
+publish binaries to your local maven repository:
+
+    git clone http://github.com/corda/token-sdk
+    cd token-sdk
+    ./gradlew clean install

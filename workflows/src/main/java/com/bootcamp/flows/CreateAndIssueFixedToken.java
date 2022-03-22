@@ -1,5 +1,6 @@
 package com.bootcamp.flows;
 
+import co.paralleluniverse.fibers.Suspendable;
 import com.r3.corda.lib.tokens.contracts.states.FungibleToken;
 import com.r3.corda.lib.tokens.workflows.flows.rpc.IssueTokens;
 import com.r3.corda.lib.tokens.workflows.utilities.FungibleTokenBuilder;
@@ -15,20 +16,21 @@ import java.util.Collections;
 @StartableByRPC
 public class CreateAndIssueFixedToken extends FlowLogic<SignedTransaction> {
 
-    private String currenctCode;
+    private String currencyCode;
     private Long amount;
     private Party recipient;
 
-    public CreateAndIssueFixedToken(String currenctCode, Long amount, Party recipient) {
-        this.currenctCode = currenctCode;
+    public CreateAndIssueFixedToken(String currencyCode, Long amount, Party recipient) {
+        this.currencyCode = currencyCode;
         this.amount = amount;
         this.recipient = recipient;
     }
 
     @Override
+    @Suspendable
     public SignedTransaction call() throws FlowException {
 
-        TokenType tokenType = new TokenType(currenctCode,2);
+        TokenType tokenType = new TokenType(currencyCode,2);
 
         // The FungibleTokenBuilder allows quick and easy stepwise assembly of a token that can be split/merged
         FungibleToken tokens = new FungibleTokenBuilder()
