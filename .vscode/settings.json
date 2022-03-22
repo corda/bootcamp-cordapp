@@ -1,7 +1,0 @@
-{
-    "java.test.config": {
-        "name": "CustomTestConfig",
-        "workingDirectory": "${workspaceFolder}",
-        "vmargs": ["-ea", "-javaagent:lib/quasar.jar"]
-    }
-}
