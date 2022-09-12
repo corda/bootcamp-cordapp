@@ -148,4 +148,4 @@ Once you've finished the CorDapp's code, run it with the following steps:
 * You can now see the tokens in the vaults of Party A and Party B (but not
   Party C!) by running the following command in their respective terminals:
 
-  `run vaultQuery contractStateType: com.bootcamp.contracts.TokenState`
+  `run vaultQuery contractStateType: com.bootcamp.states.TokenState`
